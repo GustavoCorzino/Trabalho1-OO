@@ -23,7 +23,7 @@ public class Player extends Characters{
         else if(id == 3)
             return new Targaryen(name);
         else
-            return 0;
+            return null;
     }
     
     // Getters e Setters
