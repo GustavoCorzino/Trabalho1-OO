@@ -1,32 +1,55 @@
 package com.mycompany.batalhatatica;
 
 public class Board {
-    private int[][] table;
+    private String[][] table;
     private String[] occupied;
-    private String command1;
-    private String command2;
     
     public Board() {
-        this.table = new int[11][11];
+        this.table = new String[11][11];
+        beginGame();
         this.occupied = new String[4];
-        this.command1 = "";
-        this.command2 = "";
     }
     
     // Getters e Setters
-    public int[][] getTable() {
+    public String[][] getTable() {
         return table;
     }
     
     public String[] getOccupied() {
         return occupied;
     }
-    
-    public void setCommand1(String command1) {
-        this.command1 = command1;
-    }
-    
-    public void setCommand2(String command2) {
-        this.command2 = command2;
+
+    private void beginGame(){
+        for(int i=0; i<10; i++)
+            for(int j=0; j<10; j++)
+                table[i][j] = ".";}
+
+    public void display(int turno){
+        System.out.println("Turno " + turno);
+        System.out.println();
+        // Cabeçalho com letras
+        System.out.print("   ");
+        for (char c = 'A'; c < 'A' + 10; c++) {
+            System.out.print(" " + c + " ");
+        }
+        System.out.println();
+        for(int i=0; i<10; i++){
+            System.out.printf("%2d ", i+1); //número da linha 1-10
+            for(int j=0; j<10; j++){
+                System.out.print(" " +table[i][j] + " ");}
+            System.out.println();}}
+
+    public boolean insert(String posicion, String character){
+        if(posicion.length() < 2 || posicion.length() > 3)
+            return false;
+        char colunaChar=Character.toUpperCase(posicion.charAt(0));
+        int linha = Integer.parseInt(posicion.substring(1))-1;
+        int coluna = colunaChar - 'A';
+
+        if(linha<0 || linha>=10 || coluna <0 || coluna>=10)
+            return false;
+
+        table[linha][coluna] = character;
+        return true;
     }
 }
