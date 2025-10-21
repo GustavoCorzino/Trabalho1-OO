@@ -14,12 +14,14 @@ public class Game{
         boolean continuar = true;
         int turno = 1;
         System.out.print("Digite a posicao (ex:B3) e a inicial da sua peca (ex: L para Langster, ou 'sair': ");
-        while (continuar) {
+        while(continuar) {
             jogo.display(turno);
             System.out.print("Digite a jogada: ");
             String entrada = teclado.nextLine();
-            if (entrada.equalsIgnoreCase("sair"))
+            if (entrada.equalsIgnoreCase("sair")){
                 continuar = false;
+                break;
+            }
             String[] partes = entrada.trim().split("\\s+");
             if (partes.length != 2) {
                 System.out.println("Entrada inválida, use o formato B3 L");
