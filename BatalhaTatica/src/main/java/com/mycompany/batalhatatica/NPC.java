@@ -26,6 +26,22 @@ public class NPC extends Characters {
             return new Targaryen("NPC Targaryen");
     }
     
+    public jogadaAutomatica(Board jogo){
+        double random = Math.random();
+        int id = (int)(random * 3) + 1; // Gera 1, 2 ou 3
+
+        if(id == 1){
+            int linha=(int)(random*1) + 'A';
+            int coluna=(int)(random*1);
+            String posicao=String.valueOf(linha)+String.valueOf(coluna);
+            jogo.inserirPeca(posicao, "S")
+        }
+        else if(id == 2)
+            return new Lannister("NPC Lannister");
+        else
+            return new Targaryen("NPC Targaryen");
+    }
+    
     // Getters
     public Characters getP1() { return p1; }
     public Characters getP2() { return p2; }

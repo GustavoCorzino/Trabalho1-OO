@@ -7,7 +7,7 @@ public class Board {
     public Board() {
         this.table = new String[11][11];
         beginGame();
-        this.occupied = new String[4];
+        this.occupied = new String[6];
     }
     
     // Getters e Setters
@@ -48,8 +48,15 @@ public class Board {
 
         if(linha<0 || linha>=10 || coluna <0 || coluna>=10)
             return false;
-
-        table[linha][coluna] = character;
+        if(table[linha][coluna] == ".")
+            table[linha][coluna] = character;
+        else
+            if(table[linha][coluna]=="L")
+                character.langsterAtacked();
+            else if(table[linha][coluna]=="T")
+                character.targaryenAtacked();
+            else
+                character.starkAtacked();
         return true;
     }
 }
