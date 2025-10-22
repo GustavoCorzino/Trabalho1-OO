@@ -1,9 +1,7 @@
 package com.mycompany.batalhatatica;
 import java.util.Scanner;
 
-//classe de base para os personagens com, vida, dano, defesa, alcance, mod. ofensivo e mod. defensivo
-public class Characters{
-    private int id;
+public class Characters {
     private String name;
     private int hp;
     private double atk;
@@ -12,8 +10,7 @@ public class Characters{
     private double crit;
     private double resist;
 
-    public Characters(int id, String name, int hp, double atk, double def, int range, double crit, double resist){
-        this.id = id;
+    public Characters(String name, int hp, double atk, double def, int range, double crit, double resist){
         this.name = name;
         this.hp = hp;
         this.atk = atk;
@@ -27,12 +24,10 @@ public class Characters{
         Scanner teclado = new Scanner(System.in);
         System.out.print("Digite o nome do seu " + name + ": ");
         String nome = teclado.nextLine();
-        teclado.close();
         return nome;
     }
 
     // Getters e Setters
-    public int getId() { return id; }
     public String getName() { return name; }
     public int getHp() { return hp; }
     public void setHp(int hp) { this.hp = hp; }
@@ -41,23 +36,27 @@ public class Characters{
     public int getRange() { return range; }
     public double getCrit() { return crit; }
     public double getResist() { return resist; }
+
+    public void starkAttacked(int linha, int coluna){ /* implementar resolução de ataque */ }
+    public void lannisterAttacked(int linha, int coluna){ /* implementar resolução de ataque */ }
+    public void targaryenAttacked(int linha, int coluna){ /* implementar resolução de ataque */ }
 }
 
-class Stark extends Characters{
-    public Stark(String name) {
-        super(1, name, 60, 20, 10, 1, 1, 0.8);
+class Stark extends Characters {
+    public Stark(String name){
+        super(name, 60, 20, 10, 1, 0.0, 0.2);
     }
 }
 
-class Lannister extends Characters{
-    public Lannister(String name) {
-        super(2, name, 50, 20, 10, 2, 1.15, 1);
+class Lannister extends Characters {
+    public Lannister(String name){
+        super(name, 50, 20, 10, 2, 0.15, 0.0);
     }
 }
 
-class Targaryen extends Characters{
+class Targaryen extends Characters {
     public Targaryen(String name){
-        super(3, name, 45, 20, 10, 3, 0, 1);
+        super(name, 45, 20, 10, 3, 1.0, 0.0);
     }
 }
 
