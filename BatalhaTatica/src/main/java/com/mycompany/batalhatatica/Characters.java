@@ -1,7 +1,5 @@
 package com.mycompany.batalhatatica;
 
-import java.util.Scanner;
-
 public class Characters {
     private String name;
     private int hp;
@@ -27,14 +25,6 @@ public class Characters {
 
     public Characters(String name, int hp, double atk, double def, int range, double crit, double resist) {
         this(name, hp, atk, def, range, crit, resist, -1, -1);
-    }
-
-    public String nomezinho(String name){
-        Scanner teclado = new Scanner(System.in);
-        System.out.print("Digite o nome do seu " + name + ": ");
-        String nome = teclado.nextLine();
-        teclado.close();
-        return nome;
     }
 
     // Getters e Setters

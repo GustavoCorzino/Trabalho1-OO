@@ -1,6 +1,7 @@
 com\mycompany\batalhatatica\Board.class
 com\mycompany\batalhatatica\Targaryen.class
 com\mycompany\batalhatatica\NPC.class
+com\mycompany\batalhatatica\Cell.class
 com\mycompany\batalhatatica\Match.class
 com\mycompany\batalhatatica\BatalhaTatica.class
 com\mycompany\batalhatatica\Game.class

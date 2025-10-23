@@ -19,9 +19,8 @@ public class Player {
         Scanner teclado = new Scanner(System.in);
         System.out.print("Escolha um nome para o seu guerreiro " + idx + ": ");
         String inputName = teclado.nextLine().trim();
-        teclado.close();
         if (inputName.isEmpty())
-            inputName = "Player" + idx;
+        inputName = "Player" + idx;
         if (id == 1) 
             return new Stark(inputName);
         else if (id == 2) 
