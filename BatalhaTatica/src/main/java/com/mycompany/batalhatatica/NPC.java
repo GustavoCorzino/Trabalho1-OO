@@ -36,7 +36,7 @@ public class NPC {
         Characters chosen = (choose == 1) ? p1 : (choose == 2) ? p2 : p3;
         String letra = (chosen instanceof Stark) ? "S" : (chosen instanceof Lannister) ? "L" : "T";
 
-        jogo.insert(pos, letra, chosen);
+        jogo.insert(pos, chosen, "NPC");
         System.out.println("Máquina joga: " + pos + " " + letra);
     }
 

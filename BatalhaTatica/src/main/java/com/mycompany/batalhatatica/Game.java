@@ -1,4 +1,5 @@
 package com.mycompany.batalhatatica;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -22,97 +23,170 @@ public class Game{
         boolean continuar = true;
         int turno = 1;
 
+        System.out.println("Escolha a coluna inicial das peças:\nLembrando, suas peças ocuparão as linhas 1, 2 e 3 (base do Jogador 1).");
+        String colunaInicial = teclado.nextLine().trim().toUpperCase();
+        if (colunaInicial.isEmpty()) colunaInicial = "A";
+        colunaInicial = colunaInicial.substring(0,1);
+
+        // setup jogador1 (mantive sua lógica: mesmas colunas, linhas 1,2,3)
+        jogo.insert(colunaInicial + "1", jogador1.getP1(), "J1");
+        historico.add(new Match("Setup", colunaInicial + "1 S", jogo.getSnapshot()));
+        jogo.insert(colunaInicial + "2", jogador1.getP2(), "J1");
+        historico.add(new Match("Setup", colunaInicial + "2 L", jogo.getSnapshot()));
+        jogo.insert(colunaInicial + "3", jogador1.getP3(), "J1");
+        historico.add(new Match("Setup", colunaInicial + "3 T", jogo.getSnapshot()));
+
+        // Jogador 2 / Máquina na base (linha 10)
+        if (maquina != null) {
+            jogo.insert("A10", maquina.getP1(), "NPC");
+            historico.add(new Match("Setup", "A10 S", jogo.getSnapshot()));
+            jogo.insert("B10", maquina.getP2(), "NPC");
+            historico.add(new Match("Setup", "B10 L", jogo.getSnapshot()));
+            jogo.insert("C10", maquina.getP3(), "NPC");
+            historico.add(new Match("Setup", "C10 T", jogo.getSnapshot()));
+        } else if (jogador2 != null) {
+            System.out.println("Escolha a coluna inicial das peças:\nLembrando, suas peças ocuparão as linhas 10, 9 e 8 (base do Jogador 2).");
+            colunaInicial = teclado.nextLine().trim().toUpperCase();
+            if (colunaInicial.isEmpty()) colunaInicial = "A";
+            colunaInicial = colunaInicial.substring(0,1);
+
+            // peças em linhas 10,9,8 para não sobrescrever a mesma célula
+            jogo.insert(colunaInicial + "10", jogador2.getP1(), "J2");
+            historico.add(new Match("Setup", colunaInicial + "10 S", jogo.getSnapshot()));
+
+            jogo.insert(colunaInicial + "9", jogador2.getP2(), "J2");
+            historico.add(new Match("Setup", colunaInicial + "9 L", jogo.getSnapshot()));
+
+            jogo.insert(colunaInicial + "8", jogador2.getP3(), "J2");
+            historico.add(new Match("Setup", colunaInicial + "8 T", jogo.getSnapshot()));
+        }
+
         while(continuar) {
             jogo.display(turno);
-            System.out.print("Jogador 1 — Digite a posicao (ex: B3) e a inicial da sua peca (S/L/T) ou 'sair': ");
-            String entrada = teclado.nextLine();
-            if (entrada.equalsIgnoreCase("sair")){
-                continuar = false;
+
+            // Entrada no formato: "<S|L|T> <w|a|s|d>" ou 'sair'
+            System.out.print("Jogador 1 — comando (ex: S w) ou 'sair': ");
+            String entrada = teclado.nextLine().trim();
+            if (entrada.equalsIgnoreCase("sair")) { continuar = false; break; }
+
+            String[] partes = entrada.split("\\s+");
+            if (partes.length != 2) {
+                System.out.println("Entrada inválida. Use o formato 'S w' (peça + direção).");
+            } else {
+                String pieza = partes[0].toUpperCase();
+                char dir = partes[1].toUpperCase().charAt(0);
+                if (!"SLT".contains(pieza) || "WASD".indexOf(dir) < 0) {
+                    System.out.println("Formato inválido. Peça: S/L/T e direção: w/a/s/d.");
+                } else {
+                    Characters actor1 = null;
+                    if (pieza.equals("S")) actor1 = jogador1.getP1();
+                    else if (pieza.equals("L")) actor1 = jogador1.getP2();
+                    else if (pieza.equals("T")) actor1 = jogador1.getP3();
+
+                    if (actor1 == null || actor1.isDead()) {
+                        System.out.println("Peça inválida ou já está morta.");
+                    } else {
+                        String res = jogo.move("J1", actor1, dir);
+                        if (res == null) System.out.println("Movimento inválido (fora do tabuleiro ou comando errado).");
+                        else if (res.equals("NOT_PLACED")) System.out.println("Peça ainda não posicionada.");
+                        else {
+                            historico.add(new Match("Jogador 1", "MOVE " + pieza + " " + dir, jogo.getSnapshot()));
+                            if (res.startsWith("KILL:")) {
+                                String owner = res.substring(5);
+                                if ("J2".equals(owner) && jogador2 != null) jogador2.setLives(jogador2.getLives() - 1);
+                                else if ("NPC".equals(owner) && maquina != null) maquina.setLives(maquina.getLives() - 1);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // turno do adversário
+            if (maquina != null) {
+                // máquina: tenta mover uma peça aleatória até conseguir
+                boolean played = false;
+                for (int attempts = 0; attempts < 30 && !played; attempts++) {
+                    int choose = (int)(Math.random() * 3) + 1;
+                    Characters chosen = (choose == 1) ? maquina.getP1() : (choose == 2) ? maquina.getP2() : maquina.getP3();
+                    if (chosen == null || chosen.isDead()) continue;
+                    char[] dirs = {'W','A','S','D'};
+                    char dir = dirs[(int)(Math.random()*4)];
+                    String res = jogo.move("NPC", chosen, dir);
+                    if (res != null && !res.equals("NOT_PLACED")) {
+                        historico.add(new Match("Máquina", "MOVE " + (chosen instanceof Stark ? "S" : chosen instanceof Lannister ? "L" : "T") + " " + dir, jogo.getSnapshot()));
+                        System.out.println("Máquina moveu: " + (chosen instanceof Stark ? "S" : chosen instanceof Lannister ? "L" : "T") + " " + dir);
+                        if (res.startsWith("KILL:")) {
+                            String owner = res.substring(5);
+                            if ("J1".equals(owner)) jogador1.setLives(jogador1.getLives() - 1);
+                            else if ("J2".equals(owner) && jogador2 != null) jogador2.setLives(jogador2.getLives() - 1);
+                        }
+                        played = true;
+                    }
+                }
+                if (!played) System.out.println("Máquina não conseguiu mover nesta rodada.");
+            } else if (jogador2 != null) {
+                jogo.display(turno);
+                System.out.print("Jogador 2 — comando (ex: S w) ou 'sair': ");
+                entrada = teclado.nextLine().trim();
+                if (entrada.equalsIgnoreCase("sair")) { continuar = false; break; }
+                String[] partes2 = entrada.split("\\s+");
+                if (partes2.length != 2) {
+                    System.out.println("Entrada inválida. Use o formato 'S w'.");
+                } else {
+                    String pieza = partes2[0].toUpperCase();
+                    char dir = partes2[1].toUpperCase().charAt(0);
+                    if (!"SLT".contains(pieza) || "WASD".indexOf(dir) < 0) {
+                        System.out.println("Formato inválido. Peça: S/L/T e direção: w/a/s/d.");
+                    } else {
+                        Characters actor2 = null;
+                        if (pieza.equals("S")) actor2 = jogador2.getP1();
+                        else if (pieza.equals("L")) actor2 = jogador2.getP2();
+                        else if (pieza.equals("T")) actor2 = jogador2.getP3();
+
+                        if (actor2 == null || actor2.isDead()) {
+                            System.out.println("Peça inválida ou já está morta.");
+                        } else {
+                            String res2 = jogo.move("J2", actor2, dir);
+                            if (res2 == null) System.out.println("Movimento inválido (fora do tabuleiro ou comando errado).");
+                            else if (res2.equals("NOT_PLACED")) System.out.println("Peça ainda não posicionada.");
+                            else {
+                                historico.add(new Match("Jogador 2", "MOVE " + pieza + " " + dir, jogo.getSnapshot()));
+                                if (res2.startsWith("KILL:")) {
+                                    String owner = res2.substring(5);
+                                    if ("J1".equals(owner)) jogador1.setLives(jogador1.getLives() - 1);
+                                    else if ("NPC".equals(owner) && maquina != null) maquina.setLives(maquina.getLives() - 1);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // checar fim de jogo
+            if (jogador1.getLives() <= 0) {
+                System.out.println("Jogador 1 perdeu todas as vidas. Fim de jogo.");
                 break;
             }
-            String[] partes = entrada.trim().split("\\s+");
-            if (partes.length != 2) {
-                System.out.println("Entrada inválida, use o formato B3 L");
-                continue;
+            if (jogador2 != null && jogador2.getLives() <= 0) {
+                System.out.println("Jogador 2 perdeu todas as vidas. Fim de jogo.");
+                break;
             }
-            String posicao = partes[0];
-            String peca = partes[1].toUpperCase();
-
-            Characters actor1 = null;
-            if (peca.equals("S")) 
-                actor1 = jogador2.getP1();
-            else if (peca.equals("L")) 
-                actor1 = jogador2.getP2();
-            else if (peca.equals("T")) 
-                actor1 = jogador2.getP3();
-
-            boolean ok = (actor1 != null) && jogo.insert(posicao, peca, actor1);
-            if (!ok) {
-                System.out.println("Posicao/peca invalida, tente novamente.");
-            } else {
-                historico.add(new Match("Jogador 1", posicao + " " + peca, jogo.getSnapshot()));
-            }
-
-            // vez do oponente
-            if (maquina != null){
-                // máquina joga
-                // jogadaAutomatica faz insert
-                // jogadaAutomatica retorna boolean
-                int row = (int)(Math.random() * 10) + 1; // 1..10
-                char colChar = (char)('A' + (int)(Math.random() * 10)); // A..J
-                String pos = "" + colChar + row;
-                int choose = (int)(Math.random() * 3) + 1;
-                Characters chosen = (choose == 1) ? maquina.getP1() : (choose == 2) ? maquina.getP2() : maquina.getP3();
-                String letra = (chosen instanceof Stark) ? "S" : (chosen instanceof Lannister) ? "L" : "T";
-                boolean okMaq = jogo.insert(pos, letra, chosen);
-                if (okMaq) {
-                    historico.add(new Match("Máquina", pos + " " + letra, jogo.getSnapshot()));
-                    System.out.println("Máquina joga: " + pos + " " + letra);
-                } else {
-                    // se falhar (posição inválida/ocupada), apenas imprime e segue
-                    System.out.println("Máquina tentou jogar em " + pos + " e falhou.");
-                }
-
-            } else {
-                jogo.display(turno);
-                System.out.print("Jogador 2 — Digite a posicao (ex: B3) e a inicial da sua peca (S/L/T) ou 'sair': ");
-                entrada = teclado.nextLine();
-                if (entrada.equalsIgnoreCase("sair")){
-                    continuar = false;
-                    break;
-                }
-                String[] partes2 = entrada.trim().split("\\s+");
-                if (partes2.length != 2) {
-                    System.out.println("Entrada inválida, use o formato B3 L");
-                    continue;
-                }
-                posicao = partes2[0];
-                peca = partes2[1].toUpperCase();
-                Characters actor2 = null;
-                if (peca.equals("S")) 
-                    actor2 = jogador1.getP1();
-                else if (peca.equals("L")) 
-                    actor2 = jogador1.getP2();
-                else if (peca.equals("T")) 
-                    actor2 = jogador1.getP3();
-
-                boolean ok2 = (actor2 != null) && jogo.insert(posicao, peca, actor2);
-                if (!ok2) {
-                    System.out.println("Posicao/peca invalida, tente novamente.");
-                } else {
-                    historico.add(new Match("Jogador 2", posicao + " " + peca, jogo.getSnapshot()));
-                }
+            if (maquina != null && maquina.getLives() <= 0) {
+                System.out.println("Máquina perdeu todas as vidas. Fim de jogo.");
+                break;
             }
 
             turno++;
         }
 
-        // exibir replay ao final
+        // replay
         System.out.println("\n--- Replay da partida ---\n");
         int t = 1;
         for (Match m : historico) {
             m.display(t++);
             System.out.println();
+            System.out.println("Pressione ENTER para o próximo frame...");
+            try { System.in.read(); } catch (Exception e) { /* ignore */ }
         }
 
         teclado.close();

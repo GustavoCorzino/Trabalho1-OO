@@ -1,5 +1,7 @@
 package com.mycompany.batalhatatica;
 
+import java.util.Scanner;
+
 public class Player {
     private Characters p1;
     private Characters p2;
@@ -14,15 +16,18 @@ public class Player {
     }
 
     private Characters escolha(int id, String idx) {
-        String defaultName = "PlayerPiece" + idx;
+        Scanner teclado = new Scanner(System.in);
+        System.out.print("Escolha um nome para o seu guerreiro " + idx + ": ");
+        String inputName = teclado.nextLine().trim();
+        teclado.close();
+        if (inputName.isEmpty())
+            inputName = "Player" + idx;
         if (id == 1) 
-            return new Stark(defaultName);
+            return new Stark(inputName);
         else if (id == 2) 
-            return new Lannister(defaultName);
-        else if (id == 3) 
-            return new Targaryen(defaultName);
+            return new Lannister(inputName);
         else 
-            return null;
+            return new Targaryen(inputName);
     }
 
     public Characters getP1() { return p1; }
