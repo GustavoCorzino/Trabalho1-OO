@@ -22,26 +22,12 @@ public class Game{
         List<Match> historico = new ArrayList<>();
         boolean continuar = true;
         int turno = 1;
-        
-        System.out.println("Escolha a(s) coluna(s) iniciais das peças (ex: A ou ABC):\nLembrando, suas peças ocuparão as linhas 1, 2 e 3 (base do Jogador 1).");
-        String colInput = teclado.nextLine().trim().toUpperCase();
-        if (colInput.isEmpty()) 
-            colInput = "A";
 
-        // preparar 3 colunas: se o usuário passou 1 letra usa a mesma para as 3 peças; se passou >=3 usa as 3 primeiras letras
-        String letters = colInput.replaceAll("[^A-Z]", "");
         String col0, col1, col2;
-        if (letters.length() <= 1) {
-            col0 = col1 = col2 = letters.substring(0,1);
-        } else if (letters.length() == 2) {
-            col0 = letters.substring(0,1);
-            col1 = letters.substring(1,2);
-            col2 = letters.substring(1,2);
-        } else {
-            col0 = letters.substring(0,1);
-            col1 = letters.substring(1,2);
-            col2 = letters.substring(2,3);
-        }
+        col0 = String.valueOf((char) ('A' + (int)(Math.random() * 10)));
+        col1 = String.valueOf((char) ('A' + (int)(Math.random() * 10)));
+        col2 = String.valueOf((char) ('A' + (int)(Math.random() * 10)));
+
 
         // setup jogador1 (linhas 1,2,3)
         jogo.insert(col0 + "1", jogador1.getP1(), "J1");
@@ -54,22 +40,9 @@ public class Game{
             jogo.insert("B10", maquina.getP2(), "NPC");
             jogo.insert("C10", maquina.getP3(), "NPC");
         } else if (jogador2 != null) {
-            System.out.println("Escolha a(s) coluna(s) iniciais das peças do Jogador 2 (ex: A ou ABC).");
-            String colInput2 = teclado.nextLine().trim().toUpperCase();
-            if (colInput2.isEmpty())
-                colInput2 = "A";
-            letters = colInput2.replaceAll("[^A-Z]", "");
-            if (letters.length() <= 1) {
-                col0 = col1 = col2 = letters.substring(0,1);
-            } else if (letters.length() == 2) {
-                col0 = letters.substring(0,1);
-                col1 = letters.substring(1,2);
-                col2 = letters.substring(1,2);
-            } else {
-                col0 = letters.substring(0,1);
-                col1 = letters.substring(1,2);
-                col2 = letters.substring(2,3);
-            }
+            col0 = String.valueOf((char) ('A' + (int)(Math.random() * 10)));
+            col1 = String.valueOf((char) ('A' + (int)(Math.random() * 10)));
+            col2 = String.valueOf((char) ('A' + (int)(Math.random() * 10)));
             // colocar em 10,9,8 para não sobrescrever
             jogo.insert(col0 + "10", jogador2.getP1(), "J2");
             jogo.insert(col1 + "9", jogador2.getP2(), "J2");
