@@ -12,7 +12,10 @@ public class Match {
     }
 
     public void display(int turno) {
-        System.out.println("Turno " + turno + " - " + mover + " jogou: " + jogada);
+        if(mover.equals("Setup inicial do jogo"))
+            System.out.println("Turno " + turno + " - " + mover  + jogada);
+        else
+            System.out.println("Turno " + turno + " - " + mover + " jogou: " + jogada);
         System.out.print("   ");
         for (char c = 'A'; c < 'A' + 10; c++) System.out.print(" " + c + " ");
         System.out.println();

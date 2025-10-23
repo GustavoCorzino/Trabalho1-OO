@@ -1,5 +1,4 @@
 package com.mycompany.batalhatatica;
-import java.util.Scanner;
 
 public class Characters {
     private String name;
@@ -9,8 +8,10 @@ public class Characters {
     private int range;
     private double crit;
     private double resist;
+    private int linha;
+    private int coluna;
 
-    public Characters(String name, int hp, double atk, double def, int range, double crit, double resist){
+    public Characters(String name, int hp, double atk, double def, int range, double crit, double resist, int linha, int coluna) {
         this.name = name;
         this.hp = hp;
         this.atk = atk;
@@ -18,13 +19,12 @@ public class Characters {
         this.range = range;
         this.crit = crit;
         this.resist = resist;
+        this.linha = linha;
+        this.coluna = coluna;
     }
 
-    public String nomezinho(String name){
-        Scanner teclado = new Scanner(System.in);
-        System.out.print("Digite o nome do seu " + name + ": ");
-        String nome = teclado.nextLine();
-        return nome;
+    public Characters(String name, int hp, double atk, double def, int range, double crit, double resist) {
+        this(name, hp, atk, def, range, crit, resist, -1, -1);
     }
 
     // Getters e Setters
@@ -36,28 +36,41 @@ public class Characters {
     public int getRange() { return range; }
     public double getCrit() { return crit; }
     public double getResist() { return resist; }
+    public int getLinha() { return linha; }
+    public int getColuna() { return coluna; }
+    public void setPosition(int l, int c) { this.linha = l; this.coluna = c; }
 
-    public void starkAttacked(int linha, int coluna){ /* implementar resolução de ataque */ }
-    public void lannisterAttacked(int linha, int coluna){ /* implementar resolução de ataque */ }
-    public void targaryenAttacked(int linha, int coluna){ /* implementar resolução de ataque */ }
+    // dano / estado
+    public void receiveDamage(int dano) {
+        this.hp -= dano;
+    }
+    public boolean isDead() { return this.hp <= 0; }
+
+    public void starkAttacked(int linha, int coluna){ /* opcional: reações */ }
+    public void lannisterAttacked(int linha, int coluna){ /* opcional: reações */ }
+    public void targaryenAttacked(int linha, int coluna){ /* opcional: reações */ }
 }
 
+// Subclasses com dois construtores (com/sem posição)
 class Stark extends Characters {
-    public Stark(String name){
-        super(name, 60, 20, 10, 1, 0.0, 0.2);
+    public Stark(String name, int linha, int coluna){
+        super(name, 60, 20, 10, 1, 1.0, 1.2, linha, coluna);
     }
+    public Stark(String name) { super(name, 60, 20, 10, 1, 1.0, 1.2); }
 }
 
 class Lannister extends Characters {
-    public Lannister(String name){
-        super(name, 50, 20, 10, 2, 0.15, 0.0);
+    public Lannister(String name, int linha, int coluna){
+        super(name, 50, 20, 10, 2, 1.15, 1.0, linha, coluna);
     }
+    public Lannister(String name) { super(name, 50, 20, 10, 2, 1.15, 1.0); }
 }
 
 class Targaryen extends Characters {
-    public Targaryen(String name){
-        super(name, 45, 20, 10, 3, 1.0, 0.0);
+    public Targaryen(String name, int linha, int coluna){
+        super(name, 45, 20, 10, 3, 0.0, 1.0, linha, coluna);
     }
+    public Targaryen(String name) { super(name, 45, 20, 10, 3, 0.0, 1.0); }
 }
 
 
