@@ -196,11 +196,16 @@ public class Game{
         // replay
         System.out.println("\n--- Replay da partida ---\n");
         int t = 1;
+        int contagem = 1;
+        Scanner pausa = new Scanner(System.in);
         for (Match m : historico) {
-            m.display(t++);
+            System.out.println("Turno " + t);
+            if(contagem%2==0)
+                t++;
+            m.display(contagem++);
             System.out.println();
             System.out.println("Pressione ENTER para o próximo frame...");
-            new java.util.Scanner(System.in).nextLine();
+            pausa.nextLine();
         }
 
         teclado.close();

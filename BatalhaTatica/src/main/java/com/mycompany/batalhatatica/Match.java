@@ -11,11 +11,11 @@ public class Match {
         this.snapshot = snapshot;
     }
 
-    public void display(int turno) {
+    public void display(int acao) {
         if(mover.equals("Setup inicial do jogo"))
-            System.out.println("Turno " + turno + " - " + mover  + jogada);
+            System.out.println("Acao " + acao + " - " + mover  + jogada);
         else
-            System.out.println("Turno " + turno + " - " + mover + " jogou: " + jogada);
+            System.out.println("Acao " + acao + " - " + mover + " jogou: " + jogada);
         System.out.print("   ");
         for (char c = 'A'; c < 'A' + 10; c++) System.out.print(" " + c + " ");
         System.out.println();
