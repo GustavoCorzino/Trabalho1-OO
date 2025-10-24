@@ -20,9 +20,25 @@ public class Cell {
     }
 
     public String displayChar() {
+        String red = "\u001B[31m";
+        String blue = "\u001B[34m";
+        String reset = "\u001B[0m";
         if (occupant == null) return ".";
-        if (occupant instanceof Stark) return "S";
-        if (occupant instanceof Lannister) return "L";
-        return "T";
+        if (occupant instanceof Stark){
+            if("J1".equals(owner))
+                return blue + "S" + reset;
+            else
+                return red + "S" + reset;}
+        if (occupant instanceof Lannister){
+            if("J1".equals(owner))
+                return blue + "L" + reset;
+            else
+                return red + "L" + reset;}
+        if(occupant instanceof Targaryen){
+            if("J1".equals(owner))
+                return blue + "T" + reset;
+            else
+                return red + "T" + reset;}
+        return " ";
     }
 }
