@@ -18,7 +18,7 @@ public class Board {
         return table[linha][coluna].displayChar();
     }
 
-    public void display(int turno){
+    public void display(int turno, Player p1, Player p2, NPC maq){
         System.out.println("Turno " + turno);
         System.out.println();
         System.out.print("   ");
@@ -29,6 +29,49 @@ public class Board {
             for(int j=0; j<10; j++) System.out.print(" " + table[i][j].displayChar() + " ");
             System.out.println();
         }
+
+        System.out.println();
+        // Mostrar progresso do Jogador 1
+        System.out.println("Jogador 1 (Azul), progresso das peças:");
+        printCharacterProgress(p1.getP1());
+        printCharacterProgress(p1.getP2());
+        printCharacterProgress(p1.getP3());
+
+        System.out.println();
+
+        // Mostrar progresso do Jogador 2 ou Máquina
+        if (maq != null) {
+            System.out.println("Máquina (Vermelho), progresso das peças:");
+            printCharacterProgress(maq.getP1());
+            printCharacterProgress(maq.getP2());
+            printCharacterProgress(maq.getP3());
+        } else if (p2 != null) {
+            System.out.println("Jogador 2 (Vermelho), progresso das peças:");
+            printCharacterProgress(p2.getP1());
+            printCharacterProgress(p2.getP2());
+            printCharacterProgress(p2.getP3());
+        }
+
+        System.out.println();
+    }
+
+    // helper para imprimir atributos de um Characters
+    private void printCharacterProgress(Characters ch) {
+        if (ch == null) return;
+        String tipo = (ch instanceof Stark) ? "Stark" : (ch instanceof Lannister) ? "Lannister" : "Targaryen";
+        String nome = ch.getName();
+        int hp = ch.getHp();
+        double atk = ch.getAtk();
+        double def = ch.getDef();
+        int range = ch.getRange();
+        double crit = ch.getCrit();
+        double resist = ch.getResist();
+        char c = (char)('A' + ch.getColuna());
+        int l = ch.getLinha() + 1;
+        String pos = "" + c + l;
+        if(hp<=0)
+            System.out.printf(nome + " (" + tipo + ") está morto...");
+        System.out.printf(nome + " (" + tipo + ") | HP: " + hp + "| Atk: " + atk + " | Def: " + def + " | Alc: " + range + " | Crit: " + crit + " | Resist: " + resist + " | Pos: " + pos + "%n");
     }
 
     // Retorno: null = inválido; "PLACED" = peça colocada;

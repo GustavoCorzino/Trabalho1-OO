@@ -51,17 +51,17 @@ public class Game{
         historico.add(new Match("Setup inicial do jogo", " ", jogo.getSnapshot()));
 
         while(continuar) {
-            jogo.display(turno);
+            jogo.display(turno, jogador1, jogador2, maquina);
 
             // Entrada no formato: "<S|L|T> <w|a|s|d>" ou 'sair'
-            System.out.print("Jogador 1 — comando (ex: S w) ou 'sair': ");
+            System.out.print("Jogador 1, escolha seu comando (ex: S w) ou 'sair': ");
             String entrada = teclado.nextLine().trim();
             if (entrada.equalsIgnoreCase("sair")) { continuar = false; break; }
 
             String[] partes = entrada.split("\\s+");
             while (partes.length != 2) {
                 System.out.println("Entrada inválida. Use o formato 'S w' (peça + direção).");
-                System.out.print("Jogador 1 — comando (ex: S w) ou 'sair': ");
+                System.out.print("Jogador 1, escolha seu comando (ex: S w) ou 'sair': ");
                 entrada = teclado.nextLine().trim();
                 if (entrada.equalsIgnoreCase("sair")) { continuar = false; break; }
                 partes = entrada.split("\\s+");
@@ -71,7 +71,7 @@ public class Game{
             char dir = partes[1].toUpperCase().charAt(0);
             while (!"SLT".contains(pieza) || "WASD".indexOf(dir) < 0) {
                 System.out.println("Formato inválido. Peça: S/L/T e direção: w/a/s/d.");
-                System.out.print("Jogador 1 — comando (ex: S w) ou 'sair': ");
+                System.out.print("Jogador 1, seu comando (ex: S w) ou 'sair': ");
                 entrada = teclado.nextLine().trim();
                 if (entrada.equalsIgnoreCase("sair")) { continuar = false; break; }
                 partes = entrada.split("\\s+");
@@ -115,7 +115,7 @@ public class Game{
                     char dirMaq = dirs[(int)(Math.random()*4)];
                     String resM = jogo.move("NPC", chosen, dirMaq);
 
-                    if (resM != null && !resM.equals("NOT_PLACED")) {
+                    while (resM != null && !resM.equals("NOT_PLACED")) {
                         historico.add(new Match("Máquina", "MOVE " + (chosen instanceof Stark ? "S" : chosen instanceof Lannister ? "L" : "T") + " " + dirMaq, jogo.getSnapshot()));
                         System.out.println("Máquina moveu: " + (chosen instanceof Stark ? "S" : chosen instanceof Lannister ? "L" : "T") + " " + dirMaq);
                         if (resM.startsWith("KILL:")) {
@@ -128,14 +128,14 @@ public class Game{
                 }
                 if (!played) System.out.println("Máquina não conseguiu mover nesta rodada.");
             } else if (jogador2 != null) {
-                jogo.display(turno);
-                System.out.print("Jogador 2 — comando (ex: S w) ou 'sair': ");
+                jogo.display(turno, jogador1, jogador2, maquina);
+                System.out.print("Jogador 2, seu comando (ex: S w) ou 'sair': ");
                 entrada = teclado.nextLine().trim();
                 if (entrada.equalsIgnoreCase("sair")) { continuar = false; break; }
                 String[] partes2 = entrada.split("\\s+");
                 while (partes2.length != 2) {
                     System.out.println("Entrada inválida. Use o formato 'S w'.");
-                    System.out.print("Jogador 2 — comando (ex: S w) ou 'sair': ");
+                    System.out.print("Jogador 2, seu comando (ex: S w) ou 'sair': ");
                     entrada = teclado.nextLine().trim();
                     if (entrada.equalsIgnoreCase("sair")) { continuar = false; break; }
                     partes2 = entrada.split("\\s+");
@@ -143,9 +143,9 @@ public class Game{
 
                 String pieza2 = partes2[0].toUpperCase();
                 char dir2 = partes2[1].toUpperCase().charAt(0);
-                if (!"SLT".contains(pieza2) || "WASD".indexOf(dir2) < 0) {
+                while (!"SLT".contains(pieza2) || "WASD".indexOf(dir2) < 0) {
                     System.out.println("Formato inválido. Peça: S/L/T e direção: w/a/s/d.");
-                    System.out.print("Jogador 2 — comando (ex: S w) ou 'sair': ");
+                    System.out.print("Jogador 2, seu comando (ex: S w) ou 'sair': ");
                     entrada = teclado.nextLine().trim();
                     if (entrada.equalsIgnoreCase("sair")) { continuar = false; break; }
                     partes2 = entrada.split("\\s+");
