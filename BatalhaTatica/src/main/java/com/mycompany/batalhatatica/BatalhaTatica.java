@@ -9,7 +9,7 @@ public class BatalhaTatica {
                 "\nLannister: 50 de vida, 20 de ataque, 10 de defesa, 2 de alcance, 15% de critivo, 0% de reducao de dano; " +
                 "\nTaragryen: 45 de vida, 20 de ataque, 10 de defesa, 3 de alcance, 100% de critivo, 0% de reducao de dano;");
         Scanner sc = new Scanner(System.in);
-        System.out.println("Jogador 1 — escolha 3 ids (ex: 1 2 3):");
+        System.out.println("Jogador 1(Azul) — escolha 3 ids (ex: 1 2 3):");
         String jogador = sc.nextLine();
         String[] partes = jogador.trim().split("\\s+");
         if (partes.length != 3) {
@@ -30,7 +30,7 @@ public class BatalhaTatica {
 
         Game jogo = null;
         if(escolha.equals("sim")){
-            System.out.println("Jogador 2 escolha seus guerreiros seguindo o mesmo formato: ");
+            System.out.println("Jogador 2(vermelho) escolha seus guerreiros seguindo o mesmo formato: ");
             jogador = sc.nextLine();
             String[] partes2 = jogador.trim().split("\\s+");
             id1=Integer.parseInt(partes2[0]);
@@ -40,7 +40,7 @@ public class BatalhaTatica {
             jogo = new Game(player, player2, null);
         }
         else{
-            System.out.println("Escolha o nome da maquina: ");
+            System.out.println("Escolha o nome da maquina(vermelha): ");
             String maquina = sc.nextLine();
             NPC machine = new NPC(maquina);
             jogo = new Game(player, null, machine);

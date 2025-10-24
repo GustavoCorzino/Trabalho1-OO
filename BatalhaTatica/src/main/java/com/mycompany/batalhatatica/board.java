@@ -39,8 +39,7 @@ public class Board {
         if(posicion.length() < 2 || posicion.length() > 3) return null;
         char colunaChar = posicion.charAt(0);
         int linha;
-        try { linha = Integer.parseInt(posicion.substring(1)) - 1; }
-        catch(NumberFormatException e) { return null; }
+        linha = Integer.parseInt(posicion.substring(1)) - 1;
         int coluna = colunaChar - 'A';
         if(linha<0 || linha>=10 || coluna<0 || coluna>=10) return null;
 

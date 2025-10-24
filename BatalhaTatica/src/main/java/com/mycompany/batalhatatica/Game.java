@@ -59,16 +59,24 @@ public class Game{
             if (entrada.equalsIgnoreCase("sair")) { continuar = false; break; }
 
             String[] partes = entrada.split("\\s+");
-            if (partes.length != 2) {
+            while (partes.length != 2) {
                 System.out.println("Entrada inválida. Use o formato 'S w' (peça + direção).");
-                continue;
+                System.out.print("Jogador 1 — comando (ex: S w) ou 'sair': ");
+                entrada = teclado.nextLine().trim();
+                if (entrada.equalsIgnoreCase("sair")) { continuar = false; break; }
+                partes = entrada.split("\\s+");
             } 
 
             String pieza = partes[0].toUpperCase();
             char dir = partes[1].toUpperCase().charAt(0);
-            if (!"SLT".contains(pieza) || "WASD".indexOf(dir) < 0) {
+            while (!"SLT".contains(pieza) || "WASD".indexOf(dir) < 0) {
                 System.out.println("Formato inválido. Peça: S/L/T e direção: w/a/s/d.");
-                continue;
+                System.out.print("Jogador 1 — comando (ex: S w) ou 'sair': ");
+                entrada = teclado.nextLine().trim();
+                if (entrada.equalsIgnoreCase("sair")) { continuar = false; break; }
+                partes = entrada.split("\\s+");
+                pieza = partes[0].toUpperCase();
+                dir = partes[1].toUpperCase().charAt(0);
             }
 
             Characters actor1 = null;
@@ -106,6 +114,7 @@ public class Game{
                     char[] dirs = {'W','A','S','D'};
                     char dirMaq = dirs[(int)(Math.random()*4)];
                     String resM = jogo.move("NPC", chosen, dirMaq);
+
                     if (resM != null && !resM.equals("NOT_PLACED")) {
                         historico.add(new Match("Máquina", "MOVE " + (chosen instanceof Stark ? "S" : chosen instanceof Lannister ? "L" : "T") + " " + dirMaq, jogo.getSnapshot()));
                         System.out.println("Máquina moveu: " + (chosen instanceof Stark ? "S" : chosen instanceof Lannister ? "L" : "T") + " " + dirMaq);
@@ -124,16 +133,24 @@ public class Game{
                 entrada = teclado.nextLine().trim();
                 if (entrada.equalsIgnoreCase("sair")) { continuar = false; break; }
                 String[] partes2 = entrada.split("\\s+");
-                if (partes2.length != 2) {
+                while (partes2.length != 2) {
                     System.out.println("Entrada inválida. Use o formato 'S w'.");
-                    continue;
+                    System.out.print("Jogador 2 — comando (ex: S w) ou 'sair': ");
+                    entrada = teclado.nextLine().trim();
+                    if (entrada.equalsIgnoreCase("sair")) { continuar = false; break; }
+                    partes2 = entrada.split("\\s+");
                 }
 
                 String pieza2 = partes2[0].toUpperCase();
                 char dir2 = partes2[1].toUpperCase().charAt(0);
                 if (!"SLT".contains(pieza2) || "WASD".indexOf(dir2) < 0) {
                     System.out.println("Formato inválido. Peça: S/L/T e direção: w/a/s/d.");
-                    continue;
+                    System.out.print("Jogador 2 — comando (ex: S w) ou 'sair': ");
+                    entrada = teclado.nextLine().trim();
+                    if (entrada.equalsIgnoreCase("sair")) { continuar = false; break; }
+                    partes2 = entrada.split("\\s+");
+                    pieza2 = partes2[0].toUpperCase();
+                    dir2 = partes2[1].toUpperCase().charAt(0);
                 }
 
                 Characters actor2 = null;
@@ -183,7 +200,7 @@ public class Game{
             m.display(t++);
             System.out.println();
             System.out.println("Pressione ENTER para o próximo frame...");
-            try { System.in.read(); } catch (Exception e) { /* ignore */ }
+            new java.util.Scanner(System.in).nextLine();
         }
 
         teclado.close();
