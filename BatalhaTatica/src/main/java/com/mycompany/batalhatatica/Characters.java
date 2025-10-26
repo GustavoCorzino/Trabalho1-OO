@@ -40,10 +40,16 @@ public class Characters {
     public int getColuna() { return coluna; }
     public void setPosition(int l, int c) { this.linha = l; this.coluna = c; }
 
-    // dano / estado
-    public void receiveDamage(int dano) {
-        this.hp -= dano;
+    //verifica se pode atacar calculando antes a distancia entre eles
+    public boolean podeAtacar(Characters oponente){
+        int distLin = Math.abs(this.linha - oponente.getLinha());
+        int distCol = Math.abs(this.coluna - oponente.getColuna());
+        int dist = Math.max(distLin, distCol);
+        return dist <= range;
     }
+
+    // dano / estado
+    public void receiveDamage(int dano) {this.hp -= dano;}
     public boolean isDead() { return this.hp <= 0; }
 
     public void starkAttacked(int linha, int coluna){ /* opcional: reações */ }

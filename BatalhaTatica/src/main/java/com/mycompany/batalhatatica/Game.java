@@ -176,6 +176,74 @@ public class Game{
                 }
             }
 
+            private Characters definirAlvo(String player, Characters atacante){
+                List<Characters> inimigos = new  ArrayList<>();
+
+                if("J1".equals(player)){
+                    if(jogador2 != null){
+                        inimigos.add(jogador2.getP1());
+                        inimigos.add(jogador2.getP2());
+                        inimigos.add(jogador2.getP3());
+                    } else if (maquina != null) {
+                        inimigos.add(maquina.getP1());
+                        inimigos.add(maquina.getP2());
+                        inimigos.add(maquina.getP3());
+                    }
+                } else if ("J2".equals(player) || "NPC".equals(player)) {
+                    inimigos.add(jogador1.getP1());
+                    inimigos.add(jogador1.getP2());
+                    inimigos.add(jogador1.getP3());
+                }
+
+                List<Characters> noAlcance = new  ArrayList<>();
+                //filtra inimigos ao alcance
+                for(Characters inimigo : inimigos){
+                    if(inimigo == null || inimigo.isDead() == true) continue;
+                    if(atacante.podeAtacar(inimigo)){
+                        noAlcance.add(inimigo);
+                    }
+                }
+                if(noAlcance.isEmpty()){
+                    System.out.println("Nenhum inimigo ao alcance. Turno encerrado.");
+                    return null;
+                }
+                //escolher o alvo
+                Characters alvo;
+                if(noAlcance.size() == 1){
+                    alvo = noAlcance.get(0);
+                    return alvo;
+                }
+                else{
+                    //if("NPC".equals(player)){}  falta fazer o bot escolher o alvo;
+
+                    else{
+                        System.out.println("Inimigos no alcance: ");
+                        for(int i = 0; i < noAlcance.size(); i++){
+                            Characters inimigo = noAlcance.get(i);
+                            System.out.println(i+1 + "- " + inimigo.getNome() +
+                                               "\nVida: " + inimigo.getHp()  +
+                                               "\nDefesa: " + inimigo.getDef() +
+                                               "\nPosicao: " + inimigo.getLinha() + inimigo.getColuna());
+                        }
+                        int escolha = -1;
+                        while(escolha < 1 || escolha > noAlcance.size()){
+                            System.out.println("Escolha o inimigo que " + atacante.getNome() + " ira atacar:");
+                            escolha = teclado.nextLine().trim();
+                            if(escolha.matches("\\d+")){//verificar se é um numero
+                                escolha = Interger.parseInt(escolha);
+                            }
+                            else{
+                                System.out.println("Entrada invalida. Digite apenas o numero do inimigo.");
+                            }
+                        }
+                        alvo = noAlcance.get(escolha-1);
+                        return alvo;
+                    }
+
+                }
+
+            }
+
             // checar fim de jogo
             if (jogador1.getLives() <= 0) {
                 System.out.println("Jogador 1 perdeu todas as vidas. Fim de jogo.");
