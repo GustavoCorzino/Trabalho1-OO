@@ -2,6 +2,7 @@ package com.mycompany.batalhatatica;
 import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class Characters {
     private String name;
@@ -137,35 +138,40 @@ public class Characters {
         //dano apenas positivo
         danoLiquido = Math.max(0, danoLiquido);
         //formata o dano para uma casa decimal e depois transforma em double
-        return Double.parseDouble(String.format("%.2f", danoLiquido));
+        return Double.parseDouble(String.format(Locale.US, "%.2f", danoLiquido));
     }
 
     // dano / estado
     private void receiveDamage(double dano) {
         this.hp -= dano;
         if (this.hp <= 0) this.hp = 0;
-        //decidindo se vai ter impressao aqui ou na funcao ataca
-        System.out.println(this.name + "recebeu " + dano + " de dano!" +
-                "\nHp atual: " + this.hp);
     }
 
     public boolean isDead() {
         return this.hp <= 0;
     }
 
-    /*public void atacar(Character actor, String player, Player jogador1, Player jogador2, NPC maquina) { // ex: jogador1.getP1().atacar("J1");
+    public boolean atacar(Characters actor, String player, Player jogador1, Player jogador2, NPC maquina) {
         Characters atacante = actor;
         Characters alvo = definirAlvo(player, atacante, jogador1, jogador2, maquina);
 
         if (alvo == null) {
             System.out.println("Nenhum oponente ao alcance de " + atacante.getName() + ". Turno encerrado.");
-            return null;
+            return false;
         }
 
         double damage = calcDamage(atacante, alvo);
+
         alvo.receiveDamage(damage);
+        System.out.println(alvo.getName() + ", recebeu " + damage + " de dano!" +
+                           "\nHp atual: " + alvo.getHp());
+
         boolean morto = alvo.isDead();
-    }*/
+        if(morto){
+            System.out.println(alvo.getName() + "foi morto por " + atacante.getName());
+        }
+    return true;
+    }
 
     // Subclasses com dois construtores (com/sem posição)
     public static class Stark extends Characters {

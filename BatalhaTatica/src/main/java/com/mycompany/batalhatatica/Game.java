@@ -51,6 +51,7 @@ public class Game{
         historico.add(new Match("Setup inicial do jogo", " ", jogo.getSnapshot()));
 
         while(continuar) {
+            boolean ataque;
             jogo.display(turno, jogador1, jogador2, maquina);
 
             // Entrada no formato: "<S|L|T> <w|a|s|d>" ou 'sair'
@@ -103,15 +104,16 @@ public class Game{
                 }
             }
 
-            //atacar(actor1, "J1", jogador1, jogador2, maquina);
+            ataque = actor1.atacar(actor1, "J1", jogador1, jogador2, maquina);
 
             // turno do adversário
+            Characters chosen = null;
             if (maquina != null) {
                 // máquina: tenta mover uma peça aleatória até conseguir
                 boolean played = false;
                 for (int attempts = 0; attempts < 30 && !played; attempts++) {
                     int choose = (int)(Math.random() * 3) + 1;
-                    Characters chosen = (choose == 1) ? maquina.getP1() : (choose == 2) ? maquina.getP2() : maquina.getP3();
+                    chosen = (choose == 1) ? maquina.getP1() : (choose == 2) ? maquina.getP2() : maquina.getP3();
                     if (chosen == null || chosen.isDead()) continue;
                     char[] dirs = {'W','A','S','D'};
                     char dirMaq = dirs[(int)(Math.random()*4)];
@@ -130,7 +132,7 @@ public class Game{
                 }
                 if (!played) System.out.println("Máquina não conseguiu mover nesta rodada.");
 
-                //atacar(chosen, "NPC", jogador1, null, maquina);
+                ataque = chosen.atacar(chosen, "NPC", jogador1, jogador2, maquina);
             }
             else if (jogador2 != null) {
                 jogo.display(turno, jogador1, jogador2, maquina);
@@ -180,8 +182,12 @@ public class Game{
                     }
                 }
 
-                //atacar(actor2, "J2", jogador1, jogador2, null);
+                ataque = actor2.atacar(actor2, "J2", jogador1, jogador2, maquina);
             }
+            /*int podeContinuar=0;
+            if(jogador1.getP1().getHp() == 0) jogador1.getP1.setLives(jogador1.getP1.getLives() - 1);
+            if(jogador1.getP2().getHp() == 0) jogador1.getP2.setLives(jogador1.getP2.getLives() - 1);
+            if(jogador1.getP3().getHp() == 0) jogador1.getP3.setLives(jogador1.getP3.getLives() - 1);*/
 
             // checar fim de jogo
             if (jogador1.getLives() <= 0) {

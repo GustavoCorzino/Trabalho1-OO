@@ -87,6 +87,10 @@ public class Board {
         if(linha<0 || linha>=10 || coluna<0 || coluna>=10) return null;
 
         Cell cell = table[linha][coluna];
+        if(attacker.getHp()==0){
+            cell.setOccupant(null, attackerId);
+            cell.clear();
+        }
         if (cell.getOccupant() == null) {
             cell.setOccupant(attacker, attackerId);
             attacker.setPosition(linha, coluna);
