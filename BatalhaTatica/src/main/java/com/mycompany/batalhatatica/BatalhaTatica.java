@@ -5,9 +5,9 @@ public class BatalhaTatica {
     public static void main(String[] args) {
         System.out.println("Escolha seus guerreiros com os numeros respectivos e separados por espaco: Temos as opcoes 1-Stark, 2-Lannister e 3-Targaryen." +
                 "\nAs habilidades sao Vida, Ataque, Defesa, Alcance, Critico e Resistencia, separados assim:\n" +
-                "\nStark: 60 de vida, 20 de ataque, 10 de defesa, 1 de alcance, 0 de critivo, 20% de reducao de dano;" +
-                "\nLannister: 50 de vida, 20 de ataque, 10 de defesa, 2 de alcance, 15% de critivo, 0% de reducao de dano; " +
-                "\nTaragryen: 45 de vida, 20 de ataque, 10 de defesa, 3 de alcance, 100% de critivo, 0% de reducao de dano;");
+                "\nStark: 60 de vida, 20 de ataque, 10 de defesa, 1 de alcance, 0 de critico, 20% de reducao de dano;" +
+                "\nLannister: 50 de vida, 20 de ataque, 10 de defesa, 2 de alcance, 15% de critico, 0% de reducao de dano; " +
+                "\nTaragryen: 45 de vida, 20 de ataque, 10 de defesa, 3 de alcance, 100% de critico, 0% de reducao de dano;");
         Scanner sc = new Scanner(System.in);
         System.out.println("Jogador 1(Azul), escolha 3 ids, separados por espaço (ex: 1 2 3):");
         String jogador = sc.nextLine();

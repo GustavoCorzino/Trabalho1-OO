@@ -16,11 +16,11 @@ public class NPC {
     private Characters escolha(String name) {
         int id = (int)(Math.random() * 3) + 1;
         if (id == 1) 
-            return new Stark(name);
+            return new Characters.Stark(name);
         else if (id == 2) 
-            return new Lannister(name);
+            return new Characters.Lannister(name);
         else 
-            return new Targaryen(name);
+            return new Characters.Targaryen(name);
     }
 
     public int getLives() { return lives; }
@@ -34,7 +34,7 @@ public class NPC {
         // escolher peça aleatória do NPC
         int choose = (int)(Math.random() * 3) + 1;
         Characters chosen = (choose == 1) ? p1 : (choose == 2) ? p2 : p3;
-        String letra = (chosen instanceof Stark) ? "S" : (chosen instanceof Lannister) ? "L" : "T";
+        String letra = (chosen instanceof Characters.Stark) ? "S" : (chosen instanceof Characters.Lannister) ? "L" : "T";
 
         jogo.insert(pos, chosen, "NPC");
         System.out.println("Máquina joga: " + pos + " " + letra);

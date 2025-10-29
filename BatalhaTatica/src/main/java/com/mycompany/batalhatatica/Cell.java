@@ -24,17 +24,17 @@ public class Cell {
         String blue = "\u001B[34m";
         String reset = "\u001B[0m";
         if (occupant == null) return ".";
-        if (occupant instanceof Stark){
+        if (occupant instanceof Characters.Stark){
             if("J1".equals(owner))
                 return blue + "S" + reset;
             else
                 return red + "S" + reset;}
-        if (occupant instanceof Lannister){
+        if (occupant instanceof Characters.Lannister){
             if("J1".equals(owner))
                 return blue + "L" + reset;
             else
                 return red + "L" + reset;}
-        if(occupant instanceof Targaryen){
+        if(occupant instanceof Characters.Targaryen){
             if("J1".equals(owner))
                 return blue + "T" + reset;
             else

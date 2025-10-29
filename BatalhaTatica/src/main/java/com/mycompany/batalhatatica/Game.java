@@ -91,7 +91,7 @@ public class Game{
 
             String res = jogo.move("J1", actor1, dir);
             if (res == null) {
-                System.out.println("Movimento inválido (fora do tabuleiro ou comando errado).");
+                System.out.println("Movimento inválido (fora do tabuleiro, comando errado ou casa ocupada).");
             } else if (res.equals("NOT_PLACED")) {
                 System.out.println("Peça ainda não posicionada.");
             } else {
@@ -102,6 +102,8 @@ public class Game{
                     else if ("NPC".equals(owner) && maquina != null) maquina.setLives(maquina.getLives() - 1);
                 }
             }
+
+            //String ataque = actor1.atacar("J1", jogador1, jogador2, maquina);
 
             // turno do adversário
             if (maquina != null) {
@@ -116,18 +118,21 @@ public class Game{
                     String resM = jogo.move("NPC", chosen, dirMaq);
 
                     while (resM != null && !resM.equals("NOT_PLACED")) {
-                        historico.add(new Match("Máquina", "MOVE " + (chosen instanceof Stark ? "S" : chosen instanceof Lannister ? "L" : "T") + " " + dirMaq, jogo.getSnapshot()));
-                        System.out.println("Máquina moveu: " + (chosen instanceof Stark ? "S" : chosen instanceof Lannister ? "L" : "T") + " " + dirMaq);
-                        if (resM.startsWith("KILL:")) {
+                        historico.add(new Match("Máquina", "MOVE " + (chosen instanceof Characters.Stark ? "S" : chosen instanceof Characters.Lannister ? "L" : "T") + " " + dirMaq, jogo.getSnapshot()));
+                        System.out.println("Máquina moveu: " + (chosen instanceof Characters.Stark ? "S" : chosen instanceof Characters.Lannister ? "L" : "T") + " " + dirMaq);
+                        if  (resM.startsWith("KILL:")) {
                             String owner = resM.substring(5);
                             if ("J1".equals(owner)) jogador1.setLives(jogador1.getLives() - 1);
                             else if ("J2".equals(owner) && jogador2 != null) jogador2.setLives(jogador2.getLives() - 1);
                         }
                         played = true;
                     }
-                }
+                }//tenho que botar a chamada da funcao ataque
                 if (!played) System.out.println("Máquina não conseguiu mover nesta rodada.");
-            } else if (jogador2 != null) {
+
+                //ataque = chosen.atacar("NPC", jogador1, null);
+            }
+            else if (jogador2 != null) {
                 jogo.display(turno, jogador1, jogador2, maquina);
                 System.out.print("Jogador 2, seu comando (ex: S w) ou 'sair': ");
                 entrada = teclado.nextLine().trim();
@@ -164,7 +169,7 @@ public class Game{
                 }
 
                 String res2 = jogo.move("J2", actor2, dir2);
-                if (res2 == null) System.out.println("Movimento inválido (fora do tabuleiro ou comando errado).");
+                if (res2 == null) System.out.println("Movimento inválido (fora do tabuleiro, comando errado ou casa ocupada).");
                 else if (res2.equals("NOT_PLACED")) System.out.println("Peça ainda não posicionada.");
                 else {
                     historico.add(new Match("Jogador 2", "MOVE " + pieza2 + " " + dir2, jogo.getSnapshot()));
@@ -174,74 +179,8 @@ public class Game{
                         else if ("NPC".equals(owner) && maquina != null) maquina.setLives(maquina.getLives() - 1);
                     }
                 }
-            }
 
-            private Characters definirAlvo(String player, Characters atacante){
-                List<Characters> inimigos = new  ArrayList<>();
-
-                if("J1".equals(player)){
-                    if(jogador2 != null){
-                        inimigos.add(jogador2.getP1());
-                        inimigos.add(jogador2.getP2());
-                        inimigos.add(jogador2.getP3());
-                    } else if (maquina != null) {
-                        inimigos.add(maquina.getP1());
-                        inimigos.add(maquina.getP2());
-                        inimigos.add(maquina.getP3());
-                    }
-                } else if ("J2".equals(player) || "NPC".equals(player)) {
-                    inimigos.add(jogador1.getP1());
-                    inimigos.add(jogador1.getP2());
-                    inimigos.add(jogador1.getP3());
-                }
-
-                List<Characters> noAlcance = new  ArrayList<>();
-                //filtra inimigos ao alcance
-                for(Characters inimigo : inimigos){
-                    if(inimigo == null || inimigo.isDead() == true) continue;
-                    if(atacante.podeAtacar(inimigo)){
-                        noAlcance.add(inimigo);
-                    }
-                }
-                if(noAlcance.isEmpty()){
-                    System.out.println("Nenhum inimigo ao alcance. Turno encerrado.");
-                    return null;
-                }
-                //escolher o alvo
-                Characters alvo;
-                if(noAlcance.size() == 1){
-                    alvo = noAlcance.get(0);
-                    return alvo;
-                }
-                else{
-                    //if("NPC".equals(player)){}  falta fazer o bot escolher o alvo;
-
-                    else{
-                        System.out.println("Inimigos no alcance: ");
-                        for(int i = 0; i < noAlcance.size(); i++){
-                            Characters inimigo = noAlcance.get(i);
-                            System.out.println(i+1 + "- " + inimigo.getNome() +
-                                               "\nVida: " + inimigo.getHp()  +
-                                               "\nDefesa: " + inimigo.getDef() +
-                                               "\nPosicao: " + inimigo.getLinha() + inimigo.getColuna());
-                        }
-                        int escolha = -1;
-                        while(escolha < 1 || escolha > noAlcance.size()){
-                            System.out.println("Escolha o inimigo que " + atacante.getNome() + " ira atacar:");
-                            escolha = teclado.nextLine().trim();
-                            if(escolha.matches("\\d+")){//verificar se é um numero
-                                escolha = Interger.parseInt(escolha);
-                            }
-                            else{
-                                System.out.println("Entrada invalida. Digite apenas o numero do inimigo.");
-                            }
-                        }
-                        alvo = noAlcance.get(escolha-1);
-                        return alvo;
-                    }
-
-                }
-
+                //ataque = actor2.atacar("J2", jogador1, jogador2, null);
             }
 
             // checar fim de jogo
