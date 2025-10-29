@@ -135,6 +135,24 @@ public class Board {
         }
     }
 
+    public void removeCharacter(Characters ch) {
+        if (ch == null) return;
+        int linha = ch.getLinha();
+        int coluna = ch.getColuna();
+
+        // Verifica se está dentro dos limites
+        if (linha >= 0 && linha < 10 && coluna >= 0 && coluna < 10) {
+            Cell cell = table[linha][coluna];
+            if (cell.getOccupant() == ch) {
+                cell.clear(); // Limpa a célula
+            }
+        }
+
+        // Atualiza posição do personagem
+        ch.setPosition(-1, -1);
+    }
+
+
     // retorna uma cópia do tabuleiro
     public String[][] getSnapshot() {
         String[][] copy = new String[10][10];
