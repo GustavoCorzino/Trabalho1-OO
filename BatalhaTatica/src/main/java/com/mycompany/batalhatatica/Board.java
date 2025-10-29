@@ -58,7 +58,7 @@ public class Board {
     // helper para imprimir atributos de um Characters
     private void printCharacterProgress(Characters ch) {
         if (ch == null) return;
-        String tipo = (ch instanceof Stark) ? "Stark" : (ch instanceof Lannister) ? "Lannister" : "Targaryen";
+        String tipo = (ch instanceof Characters.Stark) ? "Stark" : (ch instanceof Characters.Lannister) ? "Lannister" : "Targaryen";
         String nome = ch.getName();
         int hp = ch.getHp();
         double atk = ch.getAtk();
@@ -92,25 +92,11 @@ public class Board {
             attacker.setPosition(linha, coluna);
             return "PLACED";
         } else {
-            // combate: attacker x defender
-            Characters defender = cell.getOccupant();
-            String defenderOwner = cell.getOwner();
-
-            int dano = Damage(attacker, defender);
-            defender.receiveDamage(dano);
-
-            if (defender.isDead()) {
-                cell.clear();
-                // opcional: colocar atacante na posição do defensor (se desejado)
-                // attacker.setPosition(linha, coluna);
-                return "KILL:" + defenderOwner;
-            } else {
-                return "HIT";
-            }
+            return null;
         }
     }
 
-    // Retornos: null = inválido; "NOT_PLACED" = peça não foi posicionada ainda; "MOVED", "HIT", "KILL:<owner>"
+    // Retornos: null = inválido; "NOT_PLACED" = peça não foi posicionada ainda; "MOVED";
     public String move(String ownerId, Characters piece, char direction) {
         int l = piece.getLinha();
         int c = piece.getColuna();
@@ -143,35 +129,10 @@ public class Board {
             target.setOccupant(piece, ownerId);
             piece.setPosition(nl, nc);
             return "MOVED";
-        } else {
-            // combate ao mover para célula ocupada
-            Characters defender = target.getOccupant();
-            String defenderOwner = target.getOwner();
-
-            int dano = Damage(piece, defender);
-            defender.receiveDamage(dano);
-
-            if (defender.isDead()) {
-                // remove defensor e move atacante para a célula
-                target.clear();
-                origin.clear();
-                target.setOccupant(piece, ownerId);
-                piece.setPosition(nl, nc);
-                return "KILL:" + defenderOwner;
-            } else {
-                return "HIT";
-            }
         }
-    }
-
-    private int Damage(Characters atk, Characters def) {
-        double base = atk.getAtk()*atk.getCrit() - def.getDef()*def.getResist();
-        int dano = (int)base;
-        if(atk.getCrit()==0.0) 
-            dano=(int)atk.getAtk();
-        if (dano < 1) 
-            dano = 0;
-        return dano;
+        else {
+            return null;
+        }
     }
 
     // retorna uma cópia do tabuleiro

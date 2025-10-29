@@ -91,7 +91,7 @@ public class Game{
 
             String res = jogo.move("J1", actor1, dir);
             if (res == null) {
-                System.out.println("Movimento inválido (fora do tabuleiro ou comando errado).");
+                System.out.println("Movimento inválido (fora do tabuleiro, comando errado ou casa ocupada).");
             } else if (res.equals("NOT_PLACED")) {
                 System.out.println("Peça ainda não posicionada.");
             } else {
@@ -102,6 +102,8 @@ public class Game{
                     else if ("NPC".equals(owner) && maquina != null) maquina.setLives(maquina.getLives() - 1);
                 }
             }
+
+            //atacar(actor1, "J1", jogador1, jogador2, maquina);
 
             // turno do adversário
             if (maquina != null) {
@@ -116,9 +118,9 @@ public class Game{
                     String resM = jogo.move("NPC", chosen, dirMaq);
 
                     while (resM != null && !resM.equals("NOT_PLACED")) {
-                        historico.add(new Match("Máquina", "MOVE " + (chosen instanceof Stark ? "S" : chosen instanceof Lannister ? "L" : "T") + " " + dirMaq, jogo.getSnapshot()));
-                        System.out.println("Máquina moveu: " + (chosen instanceof Stark ? "S" : chosen instanceof Lannister ? "L" : "T") + " " + dirMaq);
-                        if (resM.startsWith("KILL:")) {
+                        historico.add(new Match("Máquina", "MOVE " + (chosen instanceof Characters.Stark ? "S" : chosen instanceof Characters.Lannister ? "L" : "T") + " " + dirMaq, jogo.getSnapshot()));
+                        System.out.println("Máquina moveu: " + (chosen instanceof Characters.Stark ? "S" : chosen instanceof Characters.Lannister ? "L" : "T") + " " + dirMaq);
+                        if  (resM.startsWith("KILL:")) {
                             String owner = resM.substring(5);
                             if ("J1".equals(owner)) jogador1.setLives(jogador1.getLives() - 1);
                             else if ("J2".equals(owner) && jogador2 != null) jogador2.setLives(jogador2.getLives() - 1);
@@ -127,7 +129,10 @@ public class Game{
                     }
                 }
                 if (!played) System.out.println("Máquina não conseguiu mover nesta rodada.");
-            } else if (jogador2 != null) {
+
+                //atacar(chosen, "NPC", jogador1, null, maquina);
+            }
+            else if (jogador2 != null) {
                 jogo.display(turno, jogador1, jogador2, maquina);
                 System.out.print("Jogador 2, seu comando (ex: S w) ou 'sair': ");
                 entrada = teclado.nextLine().trim();
@@ -164,7 +169,7 @@ public class Game{
                 }
 
                 String res2 = jogo.move("J2", actor2, dir2);
-                if (res2 == null) System.out.println("Movimento inválido (fora do tabuleiro ou comando errado).");
+                if (res2 == null) System.out.println("Movimento inválido (fora do tabuleiro, comando errado ou casa ocupada).");
                 else if (res2.equals("NOT_PLACED")) System.out.println("Peça ainda não posicionada.");
                 else {
                     historico.add(new Match("Jogador 2", "MOVE " + pieza2 + " " + dir2, jogo.getSnapshot()));
@@ -174,6 +179,8 @@ public class Game{
                         else if ("NPC".equals(owner) && maquina != null) maquina.setLives(maquina.getLives() - 1);
                     }
                 }
+
+                //atacar(actor2, "J2", jogador1, jogador2, null);
             }
 
             // checar fim de jogo
