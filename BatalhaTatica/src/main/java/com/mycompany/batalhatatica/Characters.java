@@ -148,10 +148,10 @@ public class Characters {
     }
 
     public boolean isDead() {
-        return this.hp <= 0;
+        return this.getHp() <= 0;
     }
 
-    public boolean atacar(Characters actor, String player, Player jogador1, Player jogador2, NPC maquina) {
+    public boolean atacar(Characters actor, String player, Player jogador1, Player jogador2, NPC maquina, Board jogo) {
         Characters atacante = actor;
         Characters alvo = definirAlvo(player, atacante, jogador1, jogador2, maquina);
 
@@ -164,11 +164,14 @@ public class Characters {
 
         alvo.receiveDamage(damage);
         System.out.println(alvo.getName() + ", recebeu " + damage + " de dano!" +
-                           "\nHp atual: " + alvo.getHp());
+                "\nHp atual: " + alvo.getHp());
 
         boolean morto = alvo.isDead();
-        if(morto){
-            System.out.println(alvo.getName() + "foi morto por " + atacante.getName());
+        if (morto) {
+            System.out.println(alvo.getName() + " foi morto por " + atacante.getName());
+
+            // Remove o personagem do tabuleiro
+            jogo.removeCharacter(alvo);
         }
     return true;
     }

@@ -104,7 +104,10 @@ public class Game{
                 }
             }
 
-            ataque = actor1.atacar(actor1, "J1", jogador1, jogador2, maquina);
+            ataque = actor1.atacar(actor1, "J1", jogador1, jogador2, maquina, jogo);
+            if(jogador1.getP1().getHp() == 0) jogador1.setLives(jogador1.getLives() - 1);
+            if(jogador1.getP2().getHp() == 0) jogador1.setLives(jogador1.getLives() - 1);
+            if(jogador1.getP3().getHp() == 0) jogador1.setLives(jogador1.getLives() - 1);
 
             // turno do adversário
             Characters chosen = null;
@@ -132,7 +135,10 @@ public class Game{
                 }
                 if (!played) System.out.println("Máquina não conseguiu mover nesta rodada.");
 
-                ataque = chosen.atacar(chosen, "NPC", jogador1, jogador2, maquina);
+                ataque = chosen.atacar(chosen, "NPC", jogador1, jogador2, maquina, jogo);
+                if(maquina.getP1().getHp() == 0) maquina.setLives(maquina.getLives() - 1);
+                if(maquina.getP2().getHp() == 0) maquina.setLives(maquina.getLives() - 1);
+                if(maquina.getP3().getHp() == 0) maquina.setLives(maquina.getLives() - 1);
             }
             else if (jogador2 != null) {
                 jogo.display(turno, jogador1, jogador2, maquina);
@@ -182,12 +188,11 @@ public class Game{
                     }
                 }
 
-                ataque = actor2.atacar(actor2, "J2", jogador1, jogador2, maquina);
+                ataque = actor2.atacar(actor2, "J2", jogador1, jogador2, maquina, jogo);
+                if(jogador2.getP1().getHp() == 0) jogador2.setLives(jogador2.getLives() - 1);
+                if(jogador2.getP2().getHp() == 0) jogador2.setLives(jogador2.getLives() - 1);
+                if(jogador2.getP3().getHp() == 0) jogador2.setLives(jogador2.getLives() - 1);
             }
-            /*int podeContinuar=0;
-            if(jogador1.getP1().getHp() == 0) jogador1.getP1.setLives(jogador1.getP1.getLives() - 1);
-            if(jogador1.getP2().getHp() == 0) jogador1.getP2.setLives(jogador1.getP2.getLives() - 1);
-            if(jogador1.getP3().getHp() == 0) jogador1.getP3.setLives(jogador1.getP3.getLives() - 1);*/
 
             // checar fim de jogo
             if (jogador1.getLives() <= 0) {

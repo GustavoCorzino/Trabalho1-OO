@@ -87,10 +87,6 @@ public class Board {
         if(linha<0 || linha>=10 || coluna<0 || coluna>=10) return null;
 
         Cell cell = table[linha][coluna];
-        if(attacker.getHp()==0){
-            cell.setOccupant(null, attackerId);
-            cell.clear();
-        }
         if (cell.getOccupant() == null) {
             cell.setOccupant(attacker, attackerId);
             attacker.setPosition(linha, coluna);
@@ -138,6 +134,24 @@ public class Board {
             return null;
         }
     }
+
+    public void removeCharacter(Characters ch) {
+        if (ch == null) return;
+        int linha = ch.getLinha();
+        int coluna = ch.getColuna();
+
+        // Verifica se está dentro dos limites
+        if (linha >= 0 && linha < 10 && coluna >= 0 && coluna < 10) {
+            Cell cell = table[linha][coluna];
+            if (cell.getOccupant() == ch) {
+                cell.clear(); // Limpa a célula
+            }
+        }
+
+        // Atualiza posição do personagem
+        ch.setPosition(-1, -1);
+    }
+
 
     // retorna uma cópia do tabuleiro
     public String[][] getSnapshot() {
