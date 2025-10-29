@@ -137,7 +137,7 @@ public class Characters {
         //dano apenas positivo
         danoLiquido = Math.max(0, danoLiquido);
         //formata o dano para uma casa decimal e depois transforma em double
-        return Double.parseDouble(String.format("%.1f", danoLiquido));
+        return Double.parseDouble(String.format("%.2f", danoLiquido));
     }
 
     // dano / estado
@@ -153,8 +153,8 @@ public class Characters {
         return this.hp <= 0;
     }
 
-    /*public String atacar(String player, Player jogador1, Player jogador2, NPC maquina) { // ex: jogador1.getP1().atacar("J1");
-        Characters atacante = this;
+    /*public void atacar(Character actor, String player, Player jogador1, Player jogador2, NPC maquina) { // ex: jogador1.getP1().atacar("J1");
+        Characters atacante = actor;
         Characters alvo = definirAlvo(player, atacante, jogador1, jogador2, maquina);
 
         if (alvo == null) {

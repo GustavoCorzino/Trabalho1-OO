@@ -103,7 +103,7 @@ public class Game{
                 }
             }
 
-            //String ataque = actor1.atacar("J1", jogador1, jogador2, maquina);
+            //atacar(actor1, "J1", jogador1, jogador2, maquina);
 
             // turno do adversário
             if (maquina != null) {
@@ -127,10 +127,10 @@ public class Game{
                         }
                         played = true;
                     }
-                }//tenho que botar a chamada da funcao ataque
+                }
                 if (!played) System.out.println("Máquina não conseguiu mover nesta rodada.");
 
-                //ataque = chosen.atacar("NPC", jogador1, null);
+                //atacar(chosen, "NPC", jogador1, null, maquina);
             }
             else if (jogador2 != null) {
                 jogo.display(turno, jogador1, jogador2, maquina);
@@ -180,7 +180,7 @@ public class Game{
                     }
                 }
 
-                //ataque = actor2.atacar("J2", jogador1, jogador2, null);
+                //atacar(actor2, "J2", jogador1, jogador2, null);
             }
 
             // checar fim de jogo
