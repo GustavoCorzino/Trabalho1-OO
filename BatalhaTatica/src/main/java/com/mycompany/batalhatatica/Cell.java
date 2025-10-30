@@ -26,19 +26,19 @@ public class Cell {
         if (occupant == null) return ".";
         if (occupant instanceof Characters.Stark){
             if("J1".equals(owner))
-                return blue + "1" + reset;
+                return blue + "S" + reset;
             else
-                return red + "1" + reset;}
+                return red + "S" + reset;}
         if (occupant instanceof Characters.Lannister){
             if("J1".equals(owner))
-                return blue + "2" + reset;
+                return blue + "L" + reset;
             else
-                return red + "2" + reset;}
+                return red + "L" + reset;}
         if(occupant instanceof Characters.Targaryen){
             if("J1".equals(owner))
-                return blue + "3" + reset;
+                return blue + "T" + reset;
             else
-                return red + "3" + reset;}
+                return red + "T" + reset;}
         return " ";
     }
 }

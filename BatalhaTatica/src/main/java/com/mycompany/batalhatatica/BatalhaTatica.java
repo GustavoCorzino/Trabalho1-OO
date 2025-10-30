@@ -80,12 +80,16 @@ public class BatalhaTatica {
 
                 Player player2 = new Player(id21, id22, id23);
                 jogo = new Game(player, player2, null);
-            } else {
+            } else if(escolha.equals("nao")) {
                 System.out.println("Escolha o nome da maquina(vermelha): ");
                 String maquina = sc.nextLine();
                 NPC machine = new NPC(maquina);
                 jogo = new Game(player, null, machine);
             }
+            else{
+                System.out.println("Opção escolhida não é válida, reiniciando o jogo");
+                continue;}
+            System.out.println("A ordem dos personagens aparece no final das informações, ao lado de suas posições, observe com cautela.");
             repetir = jogo.bootGame();
         }
         sc.close();

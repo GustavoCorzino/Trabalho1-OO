@@ -252,11 +252,13 @@ public class Game{
 
             turno++;
         }
-
-        System.out.println("Gostaria de jogar novamente(Sim) ou ver o replay e sair(Nao)?");
-        String jogarNovamente =  teclado.nextLine();
-        jogarNovamente = jogarNovamente.trim().toUpperCase();
-        if("SIM".equals(jogarNovamente))
+        String jogarNovamente;
+        do{
+            System.out.println("Gostaria de jogar novamente(Sim) ou ver o replay e sair(Nao)?");
+            jogarNovamente =  teclado.nextLine();
+            jogarNovamente = jogarNovamente.trim().toUpperCase();}
+        while(!"SIM".equals(jogarNovamente) && !jogarNovamente.equals("NAO"));
+        if("SIM".equals(jogarNovamente) )
             return true;
 
         // replay
