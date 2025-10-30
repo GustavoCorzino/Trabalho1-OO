@@ -1,5 +1,6 @@
 package com.mycompany.batalhatatica;
 
+//classe para organizar as células das tabelas
 public class Cell {
     private Characters occupant; // objeto que ocupa a célula
     private String owner; // "J1", "J2" ou "NPC"
@@ -14,12 +15,15 @@ public class Cell {
         this.owner = owner;
     }
 
+    //limpa a célula para ser ocupada pelo "." ou por outro personagem
     public void clear() {
         this.occupant = null;
         this.owner = null;
     }
 
+    //impressão das letras/perosnagens no código
     public String displayChar() {
+        //strings para mudança de cores das letras, azul para J1 e vermelho para J2
         String red = "\u001B[31m";
         String blue = "\u001B[34m";
         String reset = "\u001B[0m";

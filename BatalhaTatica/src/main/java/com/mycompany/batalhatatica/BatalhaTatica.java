@@ -7,11 +7,12 @@ public class BatalhaTatica {
         Scanner sc = new Scanner(System.in);
         boolean repetir = true;
         while(repetir){
-            System.out.println("Escolha seus guerreiros com os numeros respectivos e separados por espaco: Temos as opcoes 1-Stark, 2-Lannister e 3-Targaryen." +
+            System.out.println("\nBem vindo à Batalha Tática de Westeros ");
+            System.out.println("\nEscolha seus guerreiros com os numeros respectivos e separados por espaco: Temos as opcoes 1-Stark, 2-Lannister e 3-Targaryen." +
                     "\nAs habilidades sao Vida, Ataque, Defesa, Alcance, Critico e Resistencia, separados assim:\n" +
-                    "\nStark: 60 de vida, 20 de ataque, 10 de defesa, 1 de alcance, 0 de critico, 20% de reducao de dano;" +
+                    "\nStark: 60 de vida, 20 de ataque, 10 de defesa, 1 de alcance, 0% de critico, 20% de reducao de dano;" +
                     "\nLannister: 50 de vida, 20 de ataque, 10 de defesa, 2 de alcance, 15% de critico, 0% de reducao de dano; " +
-                    "\nTargaryen: 45 de vida, 20 de ataque, 10 de defesa, 3 de alcance, 100% de critico, 0% de reducao de dano;");
+                    "\nTargaryen: 45 de vida, 20 de ataque, 10 de defesa, 3 de alcance, Penetração de Armadura, 0% de reducao de dano;");
 
             System.out.println("Jogador 1(Azul), escolha 3 ids, separados por espaço (ex: 1 2 3):");
             String jogador = sc.nextLine();
@@ -54,6 +55,7 @@ public class BatalhaTatica {
                 jogador = sc.nextLine();
                 String[] partes2 = jogador.trim().split("\\s+");
 
+                //Verificando as entradas do Jogador 2
                 while (partes2.length != 3 || !validarEntradas(partes2)) {
                     System.out.println("Entrada inválida! Digite exatamente 3 números válidos.");
                     jogador = sc.nextLine();
@@ -92,6 +94,7 @@ public class BatalhaTatica {
             System.out.println("A ordem dos personagens aparece no final das informações, ao lado de suas posições, observe com cautela.");
             repetir = jogo.bootGame();
         }
+        System.out.println("Muito obrigado por jogar nosso jogo!");
         sc.close();
     }
 

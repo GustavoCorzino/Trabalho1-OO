@@ -1,5 +1,6 @@
 package com.mycompany.batalhatatica;
 
+//Classe para organizar os replays
 public class Match {
     private String mover;      // "Jogador 1", "Jogador 2" ou "Máquina"
     private String jogada;     // ex: "B3 S"
@@ -11,6 +12,7 @@ public class Match {
         this.snapshot = snapshot;
     }
 
+    //Impressão do replay
     public void display(int acao) {
         if(mover.equals("Setup inicial do jogo"))
             System.out.println("Acao " + acao + " - " + mover  + jogada);

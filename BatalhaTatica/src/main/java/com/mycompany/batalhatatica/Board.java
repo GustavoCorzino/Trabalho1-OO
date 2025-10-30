@@ -1,5 +1,6 @@
 package com.mycompany.batalhatatica;
 
+//classe para definir o tabuleiro
 public class Board {
     private Cell[][] table;
 
@@ -22,6 +23,7 @@ public class Board {
         return table[linha][coluna].displayChar();
     }
 
+    //Função para mostrar o tabuleiro de cada turno
     public void display(int turno, Player p1, Player p2, NPC maq){
         System.out.println("Turno " + turno);
         System.out.println();
@@ -59,7 +61,7 @@ public class Board {
         System.out.println();
     }
 
-    // helper para imprimir atributos de um Characters
+    // Função para imprimir atributos dos personagens
     private void printCharacterProgress(Characters ch) {
         if (ch == null) return;
         String tipo = (ch instanceof Characters.Stark) ? "Stark" : (ch instanceof Characters.Lannister) ? "Lannister" : "Targaryen";
@@ -80,8 +82,7 @@ public class Board {
             System.out.printf(nome + " (" + tipo + ") | HP: " + hp + "| Atk: " + atk + " | Def: " + def + " | Alc: " + range + " | Crit: " + crit + " | Resist: " + resist + " | Pos: " + pos + " | Ordem: " + ord + "%n" );
     }
 
-    // Retorno: null = inválido; "PLACED" = peça colocada;
-    // "HIT" = atacou e defensor sobreviveu; "KILL:<owner>" = defensor morreu, owner é dono da peça destruída
+    // Função para inserir um personagem em outra casa
     public String insert(String posicion, Characters attacker, String attackerId){
         if(posicion == null) return null;
         posicion = posicion.trim().toUpperCase();
@@ -96,17 +97,17 @@ public class Board {
         if (cell.getOccupant() == null) {
             cell.setOccupant(attacker, attackerId);
             attacker.setPosition(linha, coluna);
-            return "PLACED";
+            return "PLACED";//posicao valida, boneco foi inserido
         } else {
-            return null;
+            return null;//posição invalida
         }
     }
 
-    // Retornos: null = inválido; "NOT_PLACED" = peça não foi posicionada ainda; "MOVED";
+    // Função principal de movimentação dos personagens
     public String move(String ownerId, Characters piece, char direction) {
         int l = piece.getLinha();
         int c = piece.getColuna();
-        if (l < 0 || c < 0) return "NOT_PLACED";
+        if (l < 0 || c < 0) return "NOT_PLACED";//verifica se está em posição válida, pois bonecos mortos vão em casas negativas
 
         int dl = 0, dc = 0;
         char d = Character.toUpperCase(direction);
@@ -120,13 +121,13 @@ public class Board {
 
         int nl = l + dl;
         int nc = c + dc;
-        if (nl < 0 || nl >= 10 || nc < 0 || nc >= 10) return null;
+        if (nl < 0 || nl >= 10 || nc < 0 || nc >= 10) return null;//foi pra fora dos limites
 
         Cell origin = table[l][c];
         Cell target = table[nl][nc];
 
         if (origin.getOccupant() == null || origin.getOccupant() != piece) {
-            return "NOT_PLACED";
+            return "NOT_PLACED";//célula já ocupada
         }
 
         if (target.getOccupant() == null) {
@@ -134,7 +135,7 @@ public class Board {
             origin.clear();
             target.setOccupant(piece, ownerId);
             piece.setPosition(nl, nc);
-            return "MOVED";
+            return "MOVED";//conseguiu se mover
         }
         else {
             return null;

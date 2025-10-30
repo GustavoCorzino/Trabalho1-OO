@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Locale;
 
+//classe para os personagens
 public class Characters {
     private String name;
     private int hp;
@@ -16,6 +17,7 @@ public class Characters {
     private int coluna;
     private int ordem;
 
+    //construtor básico
     public Characters(String name, int hp, double atk, double def, int range, double crit, double resist, int linha, int coluna, int ordem) {
         this.name = name;
         this.hp = hp;
@@ -29,6 +31,7 @@ public class Characters {
         this.ordem = ordem;
     }
 
+    //construtor sem posição definida para ajudar a criar os personagens que não tiveram posições definidas
     public Characters(String name, int hp, double atk, double def, int range, double crit, double resist, int ordem) {
         this(name, hp, atk, def, range, crit, resist, -1, -1, ordem);
     }
@@ -56,9 +59,11 @@ public class Characters {
         return dist <= this.range;
     }
 
+    //função auxiliar da atacar para definir os alvos do atacante
     private Characters definirAlvo(String player, Characters atacante, Player jogador1, Player jogador2, NPC maquina) {
         List<Characters> inimigos = new ArrayList<>();
 
+        //cria a lista de inimigos do jogador
         if ("J1".equals(player)) {
             if (jogador2 != null) {
                 inimigos.add(jogador2.getP1());
@@ -69,12 +74,14 @@ public class Characters {
                 inimigos.add(maquina.getP2());
                 inimigos.add(maquina.getP3());
             }
+            //cria a lista de inimigos do J1 ou do NPC
         } else if ("J2".equals(player) || "NPC".equals(player)) {
             inimigos.add(jogador1.getP1());
             inimigos.add(jogador1.getP2());
             inimigos.add(jogador1.getP3());
         }
 
+        //lista para guardar os personagens que estão no alcance do atacante
         List<Characters> noAlcance = new ArrayList<>();
         //filtra inimigos ao alcance
         for (Characters inimigo : inimigos) {
@@ -102,7 +109,7 @@ public class Characters {
                     System.out.println(i + 1 + "- " + inimigo.getName() +
                             "\nVida: " + inimigo.getHp() +
                             "\nDefesa: " + inimigo.getDef() +
-                            "\nPosicao: " + inimigo.getLinha() + inimigo.getColuna());
+                            "\nPosicao: " + 'A' + inimigo.getColuna() + " " + inimigo.getLinha());
                 }
                 int escolha = -1;
                 String entrada;
@@ -156,6 +163,8 @@ public class Characters {
         return this.getHp() <= 0;
     }
 
+
+    //Função principal de ataques e confrontos
     public boolean atacar(Characters actor, String player, Player jogador1, Player jogador2, NPC maquina, Board jogo) {
         Characters atacante = actor;
         Characters alvo = definirAlvo(player, atacante, jogador1, jogador2, maquina);

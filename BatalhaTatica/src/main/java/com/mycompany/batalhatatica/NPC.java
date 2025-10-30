@@ -1,11 +1,13 @@
 package com.mycompany.batalhatatica;
 
+//Classe para organizar o bot/maquina ou NPC(Non-playable character)
 public class NPC {
     private Characters p1;
     private Characters p2;
     private Characters p3;
     private int lives;
 
+    //definir o nome dos personagens do bot
     public NPC(String namePrefix) {
         this.p1 = escolha(namePrefix + "_1", 1);
         this.p2 = escolha(namePrefix + "_2", 2);
@@ -13,6 +15,7 @@ public class NPC {
         this.lives = 3;
     }
 
+    //Função para o bot escolher 3 personagens aleatórios
     private Characters escolha(String name, int idx) {
         int id = (int)(Math.random() * 3) + 1;
         if (id == 1) 
@@ -23,25 +26,10 @@ public class NPC {
             return new Characters.Targaryen(name, idx);
     }
 
-    public int getLives() { return lives; }
-    public void setLives(int lives) { this.lives = lives; }
-
-    public void jogadaAutomatica(Board jogo){
-        int row = (int)(Math.random() * 10) + 1; // 1..10
-        char colChar = (char)('A' + (int)(Math.random() * 10)); // A..J
-        String pos = "" + colChar + row;
-
-        // escolher peça aleatória do NPC
-        int choose = (int)(Math.random() * 3) + 1;
-        Characters chosen = (choose == 1) ? p1 : (choose == 2) ? p2 : p3;
-        String letra = (chosen instanceof Characters.Stark) ? "S" : (chosen instanceof Characters.Lannister) ? "L" : "T";
-
-        jogo.insert(pos, chosen, "NPC");
-        System.out.println("Máquina joga: " + pos + " " + letra);
-    }
-
-    // getters
+    // getters e setter
     public Characters getP1() { return p1; }
     public Characters getP2() { return p2; }
     public Characters getP3() { return p3; }
+    public int getLives() { return lives; }
+    public void setLives(int lives) { this.lives = lives; }
 }

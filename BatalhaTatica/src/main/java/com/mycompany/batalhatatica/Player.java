@@ -1,7 +1,7 @@
 package com.mycompany.batalhatatica;
-
 import java.util.Scanner;
 
+//Classe para organizar os componentes do Jogador 1 e Jogador 2
 public class Player {
     private Characters p1;
     private Characters p2;
@@ -15,6 +15,7 @@ public class Player {
         this.lives = 3;
     }
 
+    //Função auxiliar para o usuário escolher seus personagens
     private Characters escolha(int id, String idx, int ord) {
         Scanner teclado = new Scanner(System.in);
         System.out.print("Escolha um nome para o seu guerreiro " + idx + ": ");
@@ -29,6 +30,7 @@ public class Player {
             return new Characters.Targaryen(inputName, ord);
     }
 
+    //Getters e setter
     public Characters getP1() { return p1; }
     public Characters getP2() { return p2; }
     public Characters getP3() { return p3; }
