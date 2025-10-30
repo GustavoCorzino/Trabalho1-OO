@@ -177,7 +177,7 @@ public class Game {
                 }
                 if (!played) System.out.println("Máquina não conseguiu mover nesta rodada.");
 
-                ataque = chosen.atacar(chosen, "NPC", jogador1, jogador2, maquina, jogo);
+                if (chosen != null) ataque = chosen.atacar(chosen, "NPC", jogador1, jogador2, maquina, jogo);
                 if (ataque)
                     historico.add(new Match("Máquina", "MOVE e ATACA com " +
                             (chosen instanceof Characters.Stark ? "S" :
@@ -245,14 +245,14 @@ public class Game {
                     }
                     partes2 = entrada.split("\\s+");
                     pieza2 = partes2[0].toUpperCase();
-                    dir = partes2[1].toUpperCase().charAt(0);
+                    dir2 = partes2[1].toUpperCase().charAt(0);
                     actor2 = null;
                     if (pieza2.equals("1")) actor2 = jogador2.getP1();
                     else if (pieza2.equals("2")) actor2 = jogador2.getP2();
                     else if (pieza2.equals("3")) actor2 = jogador2.getP3();
                 }
 
-                String res2 = jogo.move("J2", actor2, dir);
+                String res2 = jogo.move("J2", actor2, dir2);
                 podeHistorico = false;
                 while (res2 == null || res2.equals("NOT_PLACED")) {
                     System.out.println("Movimentação inválida. Peça: 1/2/3 e direção: w/a/s/d.");
@@ -263,13 +263,13 @@ public class Game {
                         break;
                     }
                     partes2 = entrada.split("\\s+");
-                    pieza2 = partes[0].toUpperCase();
-                    dir = partes[1].toUpperCase().charAt(0);
+                    pieza2 = partes2[0].toUpperCase();
+                    dir2 = partes2[1].toUpperCase().charAt(0);
                     actor2 = null;
                     if (pieza2.equals("1")) actor2 = jogador2.getP1();
                     else if (pieza2.equals("2")) actor2 = jogador2.getP2();
                     else if (pieza2.equals("3")) actor2 = jogador2.getP3();
-                    res2 = jogo.move("J2", actor2, dir);
+                    res2 = jogo.move("J2", actor2, dir2);
                     if (res2 == null) {
                         System.out.println("Movimento inválido (fora do tabuleiro, comando errado ou casa ocupada).");
                     } else if (res2.equals("NOT_PLACED")) {
@@ -283,9 +283,9 @@ public class Game {
                 ataque = actor2.atacar(actor2, "J2", jogador1, jogador2, maquina, jogo);
                 if (podeHistorico)
                     if (ataque)
-                        historico.add(new Match("Jogador 2", "MOVE e ATACA " + pieza + " para " + dir, jogo.getSnapshot()));
+                        historico.add(new Match("Jogador 2", "MOVE e ATACA " + pieza2 + " para " + dir2, jogo.getSnapshot()));
                     else
-                        historico.add(new Match("Jogador 2", "MOVE " + pieza + " para " + dir, jogo.getSnapshot()));
+                        historico.add(new Match("Jogador 2", "MOVE " + pieza2 + " para " + dir2, jogo.getSnapshot()));
 
                 // checar fim de jogo
                 if (jogador1.getLives() <= 0) {
@@ -294,21 +294,26 @@ public class Game {
                         System.out.println("\no NPC ganhou!");
                     else
                         System.out.println("\nO Jogador 2 foi o vitorioso");
+                    continuar=false;
                     break;
                 }
                 if (jogador2 != null && jogador2.getLives() <= 0) {
                     System.out.println("Jogador 2 perdeu todas as vidas. Fim de jogo.");
                     System.out.println("\nO Jogador 1 foi o vitorioso");
+                    continuar=false;
                     break;
                 }
                 if (maquina != null && maquina.getLives() <= 0) {
                     System.out.println("Máquina perdeu todas as vidas. Fim de jogo.");
                     System.out.println("\nO Jogador 1 foi o vitorioso");
+                    continuar=false;
                     break;
                 }
 
-                turno++;
-                //parte de jogar novamente ou ver o replay, um exclui a possibilidade de eescolha do outro
+            }
+            turno++;
+        }
+                //parte de jogar novamente ou ver o replay, um exclui a possibilidade de escolha do outro
                 String jogarNovamente;
                 do {
                     System.out.println("Gostaria de jogar novamente(Sim) ou ver o replay e sair(Nao)?");
@@ -324,7 +329,6 @@ public class Game {
                 System.out.println("\n--- Replay da partida ---\n");
                 int t = 1;
                 int contagem = 1;
-                Scanner pausa = new Scanner(System.in);
                 for (Match m : historico) {
                     System.out.println("Turno " + t);
                     if (contagem % 2 == 0)
@@ -332,11 +336,8 @@ public class Game {
                     m.display(contagem++);
                     System.out.println();
                     System.out.println("Pressione ENTER para o próximo frame...");
-                    pausa.nextLine();
+                    teclado.nextLine();
                 }
-            }
-        }
-
             teclado.close();
             return false;//retorno que finaliza o jogo
     }
