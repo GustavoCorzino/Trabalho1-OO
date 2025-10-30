@@ -127,7 +127,7 @@ public class Board {
         Cell target = table[nl][nc];
 
         if (origin.getOccupant() == null || origin.getOccupant() != piece) {
-            return "NOT_PLACED";//célula já ocupada
+            return "NOT_PLACED";//erro a célula de chamada
         }
 
         if (target.getOccupant() == null) {
@@ -137,6 +137,8 @@ public class Board {
             piece.setPosition(nl, nc);
             return "MOVED";//conseguiu se mover
         }
+        else if(target.getOccupant() != null)
+            return "OCCUPED";
         else {
             return null;
         }

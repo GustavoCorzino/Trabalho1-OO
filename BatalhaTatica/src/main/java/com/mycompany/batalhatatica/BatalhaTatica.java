@@ -10,9 +10,9 @@ public class BatalhaTatica {
             System.out.println("\nBem vindo à Batalha Tática de Westeros ");
             System.out.println("\nEscolha seus guerreiros com os numeros respectivos e separados por espaco: Temos as opcoes 1-Stark, 2-Lannister e 3-Targaryen." +
                     "\nAs habilidades sao Vida, Ataque, Defesa, Alcance, Critico e Resistencia, separados assim:\n" +
-                    "\nStark: 60 de vida, 20 de ataque, 10 de defesa, 1 de alcance, 0% de critico, 20% de reducao de dano;" +
-                    "\nLannister: 50 de vida, 20 de ataque, 10 de defesa, 2 de alcance, 15% de critico, 0% de reducao de dano; " +
-                    "\nTargaryen: 45 de vida, 20 de ataque, 10 de defesa, 3 de alcance, Penetração de Armadura, 0% de reducao de dano;");
+                    "\nStark: 60 de vida, 20 de ataque, 10 de defesa, 1 de alcance, 0% de critico(Alvo recebe dano sem modificação, 20% de reducao de dano(Resistencia de 0.2);" +
+                    "\nLannister: 50 de vida, 20 de ataque, 10 de defesa, 2 de alcance, 15% de critico(Alvo recebe mais 0.15 de dano), 0% de reducao de dano; " +
+                    "\nTargaryen: 45 de vida, 20 de ataque, 10 de defesa, 3 de alcance, 100% de crítico(Alvo recebe todo o dano do ataque, defesa ignorada), 0% de reducao de dano;");
 
             System.out.println("Jogador 1(Azul), escolha 3 ids, separados por espaço (ex: 1 2 3):");
             String jogador = sc.nextLine();

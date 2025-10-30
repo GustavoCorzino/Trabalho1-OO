@@ -106,10 +106,11 @@ public class Characters {
                 System.out.println("Inimigos no alcance: ");
                 for (int i = 0; i < noAlcance.size(); i++) {
                     Characters inimigo = noAlcance.get(i);
+                    char col=(char)('A'+inimigo.getColuna());
                     System.out.println(i + 1 + "- " + inimigo.getName() +
                             "\nVida: " + inimigo.getHp() +
                             "\nDefesa: " + inimigo.getDef() +
-                            "\nPosicao: " + 'A' + inimigo.getColuna() + " " + inimigo.getLinha());
+                            "\nPosicao: " + col + inimigo.getLinha());
                 }
                 int escolha = -1;
                 String entrada;
@@ -214,21 +215,21 @@ public class Characters {
 
     public static class Lannister extends Characters {
         public Lannister(String name, int linha, int coluna, int ordem) {
-            super(name, 50, 20, 10, 2, 0.15, 1.0, linha, coluna, ordem);
+            super(name, 50, 20, 10, 2, 0.15, 0.0, linha, coluna, ordem);
         }
 
         public Lannister(String name, int ordem) {
-            super(name, 50, 20, 10, 2, 0.15, 1.0, 0, 0, ordem);
+            super(name, 50, 20, 10, 2, 0.15, 0.0, 0, 0, ordem);
         }
     }
 
     public static class Targaryen extends Characters {
         public Targaryen(String name, int linha, int coluna, int ordem) {
-            super(name, 45, 20, 10, 3, 0.0, 1.0, linha, coluna, ordem);
+            super(name, 45, 20, 10, 3, 1.0, 0.0, linha, coluna, ordem);
         }
 
         public Targaryen(String name, int ordem) {
-            super(name, 45, 20, 10, 3, 0.0, 1.0, 0, 0, ordem);
+            super(name, 45, 20, 10, 3, 1.0, 0.0, 0, 0, ordem);
         }
     }
 

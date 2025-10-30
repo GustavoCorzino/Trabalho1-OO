@@ -15,7 +15,7 @@ public class Match {
     //Impressão do replay
     public void display(int acao) {
         if(mover.equals("Setup inicial do jogo"))
-            System.out.println("Acao " + acao + " - " + mover  + jogada);
+            System.out.println("Acao " + 0 + " - " + mover  + jogada);
         else
             System.out.println("Acao " + acao + " - " + mover + " jogou: " + jogada);
         System.out.print("   ");
