@@ -14,8 +14,9 @@ public class Characters {
     private double resist;
     private int linha;
     private int coluna;
+    private int ordem;
 
-    public Characters(String name, int hp, double atk, double def, int range, double crit, double resist, int linha, int coluna) {
+    public Characters(String name, int hp, double atk, double def, int range, double crit, double resist, int linha, int coluna, int ordem) {
         this.name = name;
         this.hp = hp;
         this.atk = atk;
@@ -25,10 +26,11 @@ public class Characters {
         this.resist = resist;
         this.linha = linha;
         this.coluna = coluna;
+        this.ordem = ordem;
     }
 
-    public Characters(String name, int hp, double atk, double def, int range, double crit, double resist) {
-        this(name, hp, atk, def, range, crit, resist, -1, -1);
+    public Characters(String name, int hp, double atk, double def, int range, double crit, double resist, int ordem) {
+        this(name, hp, atk, def, range, crit, resist, -1, -1, ordem);
     }
 
     // Getters e Setters
@@ -43,6 +45,8 @@ public class Characters {
     public int getLinha() { return linha; }
     public int getColuna() { return coluna; }
     public void setPosition(int l, int c) { this.linha = l; this.coluna = c; }
+    public int getOrdem() { return ordem; }
+    public void setOrdem(int ord) {this.ordem = ord;}
 
     //verifica se pode atacar calculando antes a distancia entre eles
     private boolean podeAtacar(Characters oponente) {
@@ -87,9 +91,10 @@ public class Characters {
             alvo = noAlcance.get(0);
         } else {
             if ("NPC".equals(player)) {
-            alvo = null;
-            }  //falta fazer o bot escolher o alvo;
-
+                int id = (int) (Math.random() * noAlcance.size());
+                alvo = noAlcance.get(id);
+                return alvo;
+            }
             else {
                 System.out.println("Inimigos no alcance: ");
                 for (int i = 0; i < noAlcance.size(); i++) {
@@ -165,45 +170,56 @@ public class Characters {
         alvo.receiveDamage(damage);
         System.out.println(alvo.getName() + ", recebeu " + damage + " de dano!" +
                 "\nHp atual: " + alvo.getHp());
-
         boolean morto = alvo.isDead();
         if (morto) {
-            System.out.println(alvo.getName() + " foi morto por " + atacante.getName());
+            // Descobre de quem era o personagem morto
+            String ownerAlvo = jogo.getCell(alvo.getLinha(),alvo.getColuna()).getOwner();
 
-            // Remove o personagem do tabuleiro
+            System.out.println(alvo.getName() + " foi morto por " + atacante.getName());
             jogo.removeCharacter(alvo);
+
+            if ("J1".equals(ownerAlvo)) {
+                jogador1.setLives(jogador1.getLives() - 1);
+                System.out.println("Uma vida do Jogador 1 foi perdida!");
+            } else if ("J2".equals(ownerAlvo) && jogador2 != null) {
+                jogador2.setLives(jogador2.getLives() - 1);
+                System.out.println("Uma vida do Jogador 2 foi perdida!");
+            } else if ("NPC".equals(ownerAlvo) && maquina != null) {
+                maquina.setLives(maquina.getLives() - 1);
+                System.out.println("A Máquina perdeu uma vida!");
+            }
         }
     return true;
     }
 
     // Subclasses com dois construtores (com/sem posição)
     public static class Stark extends Characters {
-        public Stark(String name, int linha, int coluna) {
-            super(name, 60, 20, 10, 1, 1.0, 0.2, linha, coluna);
+        public Stark(String name, int linha, int coluna, int ordem) {
+            super(name, 60, 20, 10, 1, 1.0, 0.2, linha, coluna, ordem);
         }
 
-        public Stark(String name) {
-            super(name, 60, 20, 10, 1, 1.0, 0.2);
+        public Stark(String name, int ordem) {
+            super(name, 60, 20, 10, 1, 1.0, 0.2, 0, 0, ordem);
         }
     }
 
     public static class Lannister extends Characters {
-        public Lannister(String name, int linha, int coluna) {
-            super(name, 50, 20, 10, 2, 0.15, 1.0, linha, coluna);
+        public Lannister(String name, int linha, int coluna, int ordem) {
+            super(name, 50, 20, 10, 2, 0.15, 1.0, linha, coluna, ordem);
         }
 
-        public Lannister(String name) {
-            super(name, 50, 20, 10, 2, 0.15, 1.0);
+        public Lannister(String name, int ordem) {
+            super(name, 50, 20, 10, 2, 0.15, 1.0, 0, 0, ordem);
         }
     }
 
     public static class Targaryen extends Characters {
-        public Targaryen(String name, int linha, int coluna) {
-            super(name, 45, 20, 10, 3, 0.0, 1.0, linha, coluna);
+        public Targaryen(String name, int linha, int coluna, int ordem) {
+            super(name, 45, 20, 10, 3, 0.0, 1.0, linha, coluna, ordem);
         }
 
-        public Targaryen(String name) {
-            super(name, 45, 20, 10, 3, 0.0, 1.0);
+        public Targaryen(String name, int ordem) {
+            super(name, 45, 20, 10, 3, 0.0, 1.0, 0, 0, ordem);
         }
     }
 

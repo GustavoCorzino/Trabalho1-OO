@@ -8,6 +8,10 @@ public class Board {
         beginGame();
     }
 
+    public Cell getCell(int linha, int coluna){
+        return this.table[linha][coluna];
+    }
+
     private void beginGame(){
         for(int i=0; i<10; i++)
             for(int j=0; j<10; j++)
@@ -69,9 +73,11 @@ public class Board {
         char c = (char)('A' + ch.getColuna());
         int l = ch.getLinha() + 1;
         String pos = "" + c + l;
+        int ord = ch.getOrdem();
         if(hp<=0)
-            System.out.printf(nome + " (" + tipo + ") está morto...");
-        System.out.printf(nome + " (" + tipo + ") | HP: " + hp + "| Atk: " + atk + " | Def: " + def + " | Alc: " + range + " | Crit: " + crit + " | Resist: " + resist + " | Pos: " + pos + "%n");
+            System.out.printf(nome + " (" + tipo + ") está morto...\n");
+        else
+            System.out.printf(nome + " (" + tipo + ") | HP: " + hp + "| Atk: " + atk + " | Def: " + def + " | Alc: " + range + " | Crit: " + crit + " | Resist: " + resist + " | Pos: " + pos + " | Ordem: " + ord + "%n" );
     }
 
     // Retorno: null = inválido; "PLACED" = peça colocada;

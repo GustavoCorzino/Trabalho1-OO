@@ -9,24 +9,24 @@ public class Player {
     private int lives;
 
     public Player(int id1, int id2, int id3) {
-        this.p1 = escolha(id1, "1");
-        this.p2 = escolha(id2, "2");
-        this.p3 = escolha(id3, "3");
+        this.p1 = escolha(id1, "1", 1);
+        this.p2 = escolha(id2, "2", 2);
+        this.p3 = escolha(id3, "3", 3);
         this.lives = 3;
     }
 
-    private Characters escolha(int id, String idx) {
+    private Characters escolha(int id, String idx, int ord) {
         Scanner teclado = new Scanner(System.in);
         System.out.print("Escolha um nome para o seu guerreiro " + idx + ": ");
         String inputName = teclado.nextLine().trim();
         if (inputName.isEmpty())
         inputName = "Player" + idx;
         if (id == 1) 
-            return new Characters.Stark(inputName);
+            return new Characters.Stark(inputName, ord);
         else if (id == 2) 
-            return new Characters.Lannister(inputName);
+            return new Characters.Lannister(inputName, ord);
         else 
-            return new Characters.Targaryen(inputName);
+            return new Characters.Targaryen(inputName, ord);
     }
 
     public Characters getP1() { return p1; }

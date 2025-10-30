@@ -7,20 +7,20 @@ public class NPC {
     private int lives;
 
     public NPC(String namePrefix) {
-        this.p1 = escolha(namePrefix + "_1");
-        this.p2 = escolha(namePrefix + "_2");
-        this.p3 = escolha(namePrefix + "_3");
+        this.p1 = escolha(namePrefix + "_1", 1);
+        this.p2 = escolha(namePrefix + "_2", 2);
+        this.p3 = escolha(namePrefix + "_3", 3);
         this.lives = 3;
     }
 
-    private Characters escolha(String name) {
+    private Characters escolha(String name, int idx) {
         int id = (int)(Math.random() * 3) + 1;
         if (id == 1) 
-            return new Characters.Stark(name);
+            return new Characters.Stark(name, idx);
         else if (id == 2) 
-            return new Characters.Lannister(name);
+            return new Characters.Lannister(name, idx);
         else 
-            return new Characters.Targaryen(name);
+            return new Characters.Targaryen(name, idx);
     }
 
     public int getLives() { return lives; }
