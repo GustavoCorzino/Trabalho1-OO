@@ -22,11 +22,11 @@ public class Player {
         if (inputName.isEmpty())
         inputName = "Player" + idx;
         if (id == 1) 
-            return new Characters.Stark(inputName);
+            return new Characters.Stark(inputName, id);
         else if (id == 2) 
-            return new Characters.Lannister(inputName);
+            return new Characters.Lannister(inputName, id);
         else 
-            return new Characters.Targaryen(inputName);
+            return new Characters.Targaryen(inputName, id);
     }
 
     public Characters getP1() { return p1; }

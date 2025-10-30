@@ -12,8 +12,10 @@ public class BatalhaTatica {
         System.out.println("Jogador 1(Azul), escolha 3 ids, separados por espaço (ex: 1 2 3):");
         String jogador = sc.nextLine();
         String[] partes = jogador.trim().split("\\s+");
-        if (partes.length != 3) {
+        while (partes.length != 3) {
             System.out.println("Entrada inválida! Digite exatamente 3 números separados por espaço.");
+            jogador = sc.nextLine();
+            partes = jogador.trim().split("\\s+");
             sc.close();
             return;}
         int id1=Integer.parseInt(partes[0]);
@@ -33,9 +35,21 @@ public class BatalhaTatica {
             System.out.println("Jogador 2(vermelho), escolha seus guerreiros seguindo o mesmo formato: ");
             jogador = sc.nextLine();
             String[] partes2 = jogador.trim().split("\\s+");
-            id1=Integer.parseInt(partes2[0]);
-            id2=Integer.parseInt(partes2[1]);
-            id3=Integer.parseInt(partes2[2]);
+            while (partes2.length != 3) {
+                System.out.println("Entrada inválida! Digite exatamente 3 números separados por espaço.");
+                jogador = sc.nextLine();
+                partes2 = jogador.trim().split("\\s+");
+                sc.close();
+                return;}
+            id1=Integer.parseInt(partes[0]);
+            id2=Integer.parseInt(partes[1]);
+            id3=Integer.parseInt(partes[2]);
+            while (id1 < 1 || id1 > 3 || id2 < 1 || id2 > 3 || id3 < 1 || id3 > 3) {
+                System.out.println("IDs inválidos. Use apenas 1, 2 ou 3.");
+                jogador = sc.nextLine();
+                partes2 = jogador.trim().split("\\s+");
+                sc.close();
+                return;}
             Player player2 = new Player(id1, id2, id3);
             jogo = new Game(player, player2, null);
         }
@@ -45,7 +59,9 @@ public class BatalhaTatica {
             NPC machine = new NPC(maquina);
             jogo = new Game(player, null, machine);
         }
-        jogo.bootGame();
+        while(jogo.bootGame()){
+            //repete enquanto o jogador quiser jogar novamente
+        }
         sc.close();
     }
 }

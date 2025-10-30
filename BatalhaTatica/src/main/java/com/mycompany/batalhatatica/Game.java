@@ -17,7 +17,7 @@ public class Game{
         this.maquina = maq;
     }
 
-    public void bootGame() {
+    public boolean bootGame() {
         Scanner teclado = new Scanner(System.in);
         List<Match> historico = new ArrayList<>();
         boolean continuar = true;
@@ -55,14 +55,14 @@ public class Game{
             jogo.display(turno, jogador1, jogador2, maquina);
 
             // Entrada no formato: "<S|L|T> <w|a|s|d>" ou 'sair'
-            System.out.print("Jogador 1, escolha seu comando (ex: S w) ou 'sair': ");
+            System.out.print("Jogador 1, escolha seu comando (ex: 1 w) ou 'sair': ");
             String entrada = teclado.nextLine().trim();
             if (entrada.equalsIgnoreCase("sair")) { continuar = false; break; }
 
             String[] partes = entrada.split("\\s+");
             while (partes.length != 2) {
-                System.out.println("Entrada inválida. Use o formato 'S w' (peça + direção).");
-                System.out.print("Jogador 1, escolha seu comando (ex: S w) ou 'sair': ");
+                System.out.println("Entrada inválida. Use o formato '1 w' (peça + direção).");
+                System.out.print("Jogador 1, escolha seu comando (ex: 1 w) ou 'sair': ");
                 entrada = teclado.nextLine().trim();
                 if (entrada.equalsIgnoreCase("sair")) { continuar = false; break; }
                 partes = entrada.split("\\s+");
@@ -70,9 +70,9 @@ public class Game{
 
             String pieza = partes[0].toUpperCase();
             char dir = partes[1].toUpperCase().charAt(0);
-            while (!"SLT".contains(pieza) || "WASD".indexOf(dir) < 0) {
-                System.out.println("Formato inválido. Peça: S/L/T e direção: w/a/s/d.");
-                System.out.print("Jogador 1, seu comando (ex: S w) ou 'sair': ");
+            while (!"123".contains(pieza) || "WASD".indexOf(dir) < 0) {
+                System.out.println("Formato inválido. Peça: 1/2/3 e direção: w/a/s/d.");
+                System.out.print("Jogador 1, seu comando (ex: 2 w) ou 'sair': ");
                 entrada = teclado.nextLine().trim();
                 if (entrada.equalsIgnoreCase("sair")) { continuar = false; break; }
                 partes = entrada.split("\\s+");
@@ -81,9 +81,9 @@ public class Game{
             }
 
             Characters actor1 = null;
-            if (pieza.equals("S")) actor1 = jogador1.getP1();
-            else if (pieza.equals("L")) actor1 = jogador1.getP2();
-            else if (pieza.equals("T")) actor1 = jogador1.getP3();
+            if (pieza.equals("1")) actor1 = jogador1.getP1();
+            else if (pieza.equals("2")) actor1 = jogador1.getP2();
+            else if (pieza.equals("3")) actor1 = jogador1.getP3();
 
             if (actor1 == null || actor1.isDead()) {
                 System.out.println("Peça inválida ou já está morta.");
@@ -91,12 +91,13 @@ public class Game{
             }
 
             String res = jogo.move("J1", actor1, dir);
+            boolean podeHistorico = false;
             if (res == null) {
                 System.out.println("Movimento inválido (fora do tabuleiro, comando errado ou casa ocupada).");
             } else if (res.equals("NOT_PLACED")) {
                 System.out.println("Peça ainda não posicionada.");
             } else {
-                historico.add(new Match("Jogador 1", "MOVE " + pieza + " " + dir, jogo.getSnapshot()));
+                podeHistorico=true;
                 if (res.startsWith("KILL:")) {
                     String owner = res.substring(5);
                     if ("J2".equals(owner) && jogador2 != null) jogador2.setLives(jogador2.getLives() - 1);
@@ -105,14 +106,16 @@ public class Game{
             }
 
             ataque = actor1.atacar(actor1, "J1", jogador1, jogador2, maquina, jogo);
-            if(jogador1.getP1().getHp() == 0) jogador1.setLives(jogador1.getLives() - 1);
-            if(jogador1.getP2().getHp() == 0) jogador1.setLives(jogador1.getLives() - 1);
-            if(jogador1.getP3().getHp() == 0) jogador1.setLives(jogador1.getLives() - 1);
+            if(podeHistorico)
+                if(ataque)
+                    historico.add(new Match("Jogador 1", "MOVE e ATACA para " + pieza + " " + dir, jogo.getSnapshot()));
+                else
+                    historico.add(new Match("Jogador 1", "MOVE " + pieza + " " + dir, jogo.getSnapshot()));
 
             // turno do adversário
-            Characters chosen = null;
-            if (maquina != null) {
+            if (maquina != null && maquina.getLives() != 0) {
                 // máquina: tenta mover uma peça aleatória até conseguir
+                Characters chosen = null;
                 boolean played = false;
                 for (int attempts = 0; attempts < 30 && !played; attempts++) {
                     int choose = (int)(Math.random() * 3) + 1;
@@ -121,8 +124,9 @@ public class Game{
                     char[] dirs = {'W','A','S','D'};
                     char dirMaq = dirs[(int)(Math.random()*4)];
                     String resM = jogo.move("NPC", chosen, dirMaq);
-
-                    while (resM != null && !resM.equals("NOT_PLACED")) {
+                    if(resM == null) continue;
+                    if (resM.equals("NOT_PLACED")) continue;
+                    if (resM != null && !resM.equals("NOT_PLACED")) {
                         historico.add(new Match("Máquina", "MOVE " + (chosen instanceof Characters.Stark ? "S" : chosen instanceof Characters.Lannister ? "L" : "T") + " " + dirMaq, jogo.getSnapshot()));
                         System.out.println("Máquina moveu: " + (chosen instanceof Characters.Stark ? "S" : chosen instanceof Characters.Lannister ? "L" : "T") + " " + dirMaq);
                         if  (resM.startsWith("KILL:")) {
@@ -136,19 +140,25 @@ public class Game{
                 if (!played) System.out.println("Máquina não conseguiu mover nesta rodada.");
 
                 ataque = chosen.atacar(chosen, "NPC", jogador1, jogador2, maquina, jogo);
-                if(maquina.getP1().getHp() == 0) maquina.setLives(maquina.getLives() - 1);
-                if(maquina.getP2().getHp() == 0) maquina.setLives(maquina.getLives() - 1);
-                if(maquina.getP3().getHp() == 0) maquina.setLives(maquina.getLives() - 1);
+                if (ataque)
+                    historico.add(new Match("Máquina", "MOVE e ATACA com " +
+                            (chosen instanceof Characters.Stark ? "S" :
+                                    chosen instanceof Characters.Lannister ? "L" : "T"), jogo.getSnapshot()));
+                else
+                    historico.add(new Match("Máquina", "MOVE com " +
+                            (chosen instanceof Characters.Stark ? "S" :
+                                    chosen instanceof Characters.Lannister ? "L" : "T"), jogo.getSnapshot()));
+
             }
-            else if (jogador2 != null) {
+            else if (jogador2 != null && jogador2.getLives() != 0) {
                 jogo.display(turno, jogador1, jogador2, maquina);
-                System.out.print("Jogador 2, seu comando (ex: S w) ou 'sair': ");
+                System.out.print("Jogador 2, seu comando (ex: 1 w) ou 'sair': ");
                 entrada = teclado.nextLine().trim();
                 if (entrada.equalsIgnoreCase("sair")) { continuar = false; break; }
                 String[] partes2 = entrada.split("\\s+");
                 while (partes2.length != 2) {
-                    System.out.println("Entrada inválida. Use o formato 'S w'.");
-                    System.out.print("Jogador 2, seu comando (ex: S w) ou 'sair': ");
+                    System.out.println("Entrada inválida. Use o formato '1 w'.");
+                    System.out.print("Jogador 2, seu comando (ex: 1 w) ou 'sair': ");
                     entrada = teclado.nextLine().trim();
                     if (entrada.equalsIgnoreCase("sair")) { continuar = false; break; }
                     partes2 = entrada.split("\\s+");
@@ -156,9 +166,9 @@ public class Game{
 
                 String pieza2 = partes2[0].toUpperCase();
                 char dir2 = partes2[1].toUpperCase().charAt(0);
-                while (!"SLT".contains(pieza2) || "WASD".indexOf(dir2) < 0) {
-                    System.out.println("Formato inválido. Peça: S/L/T e direção: w/a/s/d.");
-                    System.out.print("Jogador 2, seu comando (ex: S w) ou 'sair': ");
+                while (!"123".contains(pieza2) || "WASD".indexOf(dir2) < 0) {
+                    System.out.println("Formato inválido. Peça: 1/2/3 e direção: w/a/s/d.");
+                    System.out.print("Jogador 2, seu comando (ex: 3 a) ou 'sair': ");
                     entrada = teclado.nextLine().trim();
                     if (entrada.equalsIgnoreCase("sair")) { continuar = false; break; }
                     partes2 = entrada.split("\\s+");
@@ -167,9 +177,9 @@ public class Game{
                 }
 
                 Characters actor2 = null;
-                if (pieza2.equals("S")) actor2 = jogador2.getP1();
-                else if (pieza2.equals("L")) actor2 = jogador2.getP2();
-                else if (pieza2.equals("T")) actor2 = jogador2.getP3();
+                if (pieza2.equals("1")) actor2 = jogador2.getP1();
+                else if (pieza2.equals("2")) actor2 = jogador2.getP2();
+                else if (pieza2.equals("3")) actor2 = jogador2.getP3();
 
                 if (actor2 == null || actor2.isDead()) {
                     System.out.println("Peça inválida ou já está morta.");
@@ -189,27 +199,40 @@ public class Game{
                 }
 
                 ataque = actor2.atacar(actor2, "J2", jogador1, jogador2, maquina, jogo);
-                if(jogador2.getP1().getHp() == 0) jogador2.setLives(jogador2.getLives() - 1);
-                if(jogador2.getP2().getHp() == 0) jogador2.setLives(jogador2.getLives() - 1);
-                if(jogador2.getP3().getHp() == 0) jogador2.setLives(jogador2.getLives() - 1);
+                if (ataque)
+                    historico.add(new Match("Jogador 2", "MOVE e ATACA para " + pieza2 + " " + dir2, jogo.getSnapshot()));
+                else
+                    historico.add(new Match("Jogador 2", "MOVE " + pieza2 + " " + dir2, jogo.getSnapshot()));
             }
 
             // checar fim de jogo
             if (jogador1.getLives() <= 0) {
                 System.out.println("Jogador 1 perdeu todas as vidas. Fim de jogo.");
+                if(maquina!=null)
+                    System.out.println("o NPC ganhou!");
+                else
+                    System.out.println("O Jogador 2 foi o vitorioso");
                 break;
             }
             if (jogador2 != null && jogador2.getLives() <= 0) {
                 System.out.println("Jogador 2 perdeu todas as vidas. Fim de jogo.");
+                System.out.println("O Jogador 1 foi o vitorioso");
                 break;
             }
             if (maquina != null && maquina.getLives() <= 0) {
                 System.out.println("Máquina perdeu todas as vidas. Fim de jogo.");
+                System.out.println("O Jogador 1 foi o vitorioso");
                 break;
             }
 
             turno++;
         }
+
+        System.out.println("Gostaria de jogar novamente(Sim) ou ver o replay e sair(Nao)?");
+        String jogarNovamente =  teclado.nextLine();
+        jogarNovamente.trim().toUpperCase();
+        if("SIM".equals(jogarNovamente))
+            return true;
 
         // replay
         System.out.println("\n--- Replay da partida ---\n");
@@ -227,5 +250,6 @@ public class Game{
         }
 
         teclado.close();
+        return false;
     }
 }
