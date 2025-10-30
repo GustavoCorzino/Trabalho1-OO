@@ -75,8 +75,9 @@ public class Board {
         String pos = "" + c + l;
         int ord = ch.getOrdem();
         if(hp<=0)
-            System.out.printf(nome + " (" + tipo + ") está morto...");
-        System.out.printf(nome + " (" + tipo + ") | HP: " + hp + "| Atk: " + atk + " | Def: " + def + " | Alc: " + range + " | Crit: " + crit + " | Resist: " + resist + " | Pos: " + pos + " | Ordem: " + ord + "%n" );
+            System.out.printf(nome + " (" + tipo + ") está morto...\n");
+        else
+            System.out.printf(nome + " (" + tipo + ") | HP: " + hp + "| Atk: " + atk + " | Def: " + def + " | Alc: " + range + " | Crit: " + crit + " | Resist: " + resist + " | Pos: " + pos + " | Ordem: " + ord + "%n" );
     }
 
     // Retorno: null = inválido; "PLACED" = peça colocada;

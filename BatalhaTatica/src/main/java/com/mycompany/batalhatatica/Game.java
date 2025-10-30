@@ -58,7 +58,10 @@ public class Game{
             System.out.print("Jogador 1, escolha seu comando (ex: 1 w) ou 'sair': ");
             String entrada = teclado.nextLine().trim();
             if (entrada.equalsIgnoreCase("sair")) { continuar = false; break; }
-
+            while (!entrada.contains(" ")) {
+                System.out.print("Entrada inválida, separe o comando por espaço, (ex: 1 w) ou 'sair': ");
+                entrada = teclado.nextLine().trim();
+            }
             String[] partes = entrada.split("\\s+");
             while (partes.length != 2) {
                 System.out.println("Entrada inválida. Use o formato '1 w' (peça + direção).");
@@ -85,9 +88,18 @@ public class Game{
             else if (pieza.equals("2")) actor1 = jogador1.getP2();
             else if (pieza.equals("3")) actor1 = jogador1.getP3();
 
-            if (actor1 == null || actor1.isDead()) {
-                System.out.println("Peça inválida ou já está morta.");
-                continue;
+            while (actor1 == null || actor1.isDead()) {
+                System.out.println("Peça inválida ou já está morta. Peça: 1/2/3 e direção: w/a/s/d.");
+                System.out.print("Jogador 1, seu comando (ex: 2 w) ou 'sair': ");
+                entrada = teclado.nextLine().trim();
+                if (entrada.equalsIgnoreCase("sair")) { continuar = false; break; }
+                partes = entrada.split("\\s+");
+                pieza = partes[0].toUpperCase();
+                dir = partes[1].toUpperCase().charAt(0);
+                actor1 = null;
+                if (pieza.equals("1")) actor1 = jogador1.getP1();
+                else if (pieza.equals("2")) actor1 = jogador1.getP2();
+                else if (pieza.equals("3")) actor1 = jogador1.getP3();
             }
 
             String res = jogo.move("J1", actor1, dir);
@@ -155,6 +167,10 @@ public class Game{
                 System.out.print("Jogador 2, seu comando (ex: 1 w) ou 'sair': ");
                 entrada = teclado.nextLine().trim();
                 if (entrada.equalsIgnoreCase("sair")) { continuar = false; break; }
+                while (!entrada.contains(" ")) {
+                    System.out.print("Entrada inválida, separe o comando por espaço, (ex: 1 w) ou 'sair': ");
+                    entrada = teclado.nextLine().trim();
+                }
                 String[] partes2 = entrada.split("\\s+");
                 while (partes2.length != 2) {
                     System.out.println("Entrada inválida. Use o formato '1 w'.");
@@ -182,8 +198,17 @@ public class Game{
                 else if (pieza2.equals("3")) actor2 = jogador2.getP3();
 
                 if (actor2 == null || actor2.isDead()) {
-                    System.out.println("Peça inválida ou já está morta.");
-                    continue;
+                    System.out.println("Peça inválida ou já está morta. Peça: 1/2/3 e direção: w/a/s/d.");
+                    System.out.print("Jogador 2, seu comando (ex: 2 w) ou 'sair': ");
+                    entrada = teclado.nextLine().trim();
+                    if (entrada.equalsIgnoreCase("sair")) { continuar = false; break; }
+                    partes2 = entrada.split("\\s+");
+                    pieza2 = partes2[0].toUpperCase();
+                    dir = partes2[1].toUpperCase().charAt(0);
+                    actor2 = null;
+                    if (pieza2.equals("1")) actor2 = jogador1.getP1();
+                    else if (pieza2.equals("2")) actor2 = jogador1.getP2();
+                    else if (pieza2.equals("3")) actor2 = jogador1.getP3();
                 }
 
                 String res2 = jogo.move("J2", actor2, dir2);
@@ -230,7 +255,7 @@ public class Game{
 
         System.out.println("Gostaria de jogar novamente(Sim) ou ver o replay e sair(Nao)?");
         String jogarNovamente =  teclado.nextLine();
-        jogarNovamente.trim().toUpperCase();
+        jogarNovamente = jogarNovamente.trim().toUpperCase();
         if("SIM".equals(jogarNovamente))
             return true;
 
